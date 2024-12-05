@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="samStyle.css">
+</head>
+<body>
+    <div class="dashboard teacher-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="menu-toggle">
+                <button class="menu-btn">☰</button>
+                <div class="menu-dropdown">
+                    <ul>
+                        <a href="/profile"><li>Profile</li></a>
+                        <a href="/teacher"><li>Dashboard</li></a>
+                        <a href="/logout"><li>Logout</li></a>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Upcoming Events</h3>
+            <div class="events-list">
+                <p>No upcoming events</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="header">
+                <h1>Teacher Dashboard</h1>
+            </header>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <!-- Sort and Filter Buttons at the Top Right -->
+                    <div class="table-controls">
+                        <button class="sort-btn">Sort</button>
+                        <button class="filter-btn">Filter</button>
+                    </div>
+                </div>
+                <div class="scrollable-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Roll Number</th>
+                                <th>Achievement Name</th>
+                                <th>Achievement Date</th>
+                                <th>Achievement category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% achievements.forEach((achievement,index)=>{%>
+                                <tr onclick="window.location.href='/getAchieve?id=<%= achievement._id%>'">
+                                    <td><%= index +1%></td>
+                                    <td><%= achievement.username%></td>
+                                    <td><%= achievement.name %></td>
+                                    <td><%= new Date(achievement.date).toLocaleDateString() %></td>
+                                    <td><%= achievement.category %></td>
+                                </tr>
+                            <% }); %> 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

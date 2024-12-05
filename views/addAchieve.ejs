@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title%></title>
+    <link rel="stylesheet" href="addAchieve.css">
+</head>
+<body class="dashboard">
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        <div class="menu-toggle">
+            <button class="menu-btn" aria-label="Toggle Menu">☰</button>
+            <div class="menu-dropdown">
+                <ul>
+                    <a href="/profile"><li>Profile</li></a>
+                    <li><a href="/<%=type %>">Dashboard</a></li>
+                    <a href="/logout"><li>Logout</li></a>
+                </ul>
+            </div>
+        </div>
+        <h3>Upcoming Events</h3>
+        <div class="events-list">
+            <p>No upcoming events</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h2>Achievement Details</h2>
+        <form action="/addachievement" method="post">
+            <label for="achievement-name">Achievement Name:</label>
+            <input type="text" id="achievement-name" name="name" value="<%= achievement ? achievement.name: ''%>" placeholder="Achievement Name" aria-label="Achievement Name" required>
+
+                <label for="achievement-date">Achievement Date:</label>
+                <input type="date" id="achievement-date" name="date" value="<%= achievement ? achievement.date.toISOString().split('T')[0] : '' %>" aria-label="Achievement Date" required>
+
+            <label for="achievement-category">Achievement Category:</label>
+            <select id="achievement-category" name="category" aria-label="Achievement Category" required>
+                <option value="" <%= !achievement ? 'selected' : '' %>>Select Category</option>
+                <option value="sports" <%= achievement?.category === 'sports' ? 'selected' : '' %>>Sports</option>
+                <option value="academic" <%= achievement?.category === 'academic' ? 'selected' : '' %>>Academic</option>
+                <option value="music" <%= achievement?.category === 'music' ? 'selected' : '' %>>Music</option>
+            </select>
+            
+
+            <label for="achievement-level">Achievement Level:</label>
+            <select id="achievement-level" name="level" aria-label="Achievement Level" required>
+                <option value="" <%= !achievement ? 'selected' : '' %>>Select Level</option>
+                <option value="school" <%= achievement?.level === 'school' ? 'selected' : '' %>>School</option>
+                <option value="state" <%= achievement?.level === 'state' ? 'selected' : '' %>>State</option>
+                <option value="national" <%= achievement?.level === 'national' ? 'selected' : '' %>>National</option>
+                <option value="course" <%= achievement?.level === 'course' ? 'selected' : '' %>>Course</option>
+            </select>
+
+            <label for="position">Position:</label>
+            <select id="position" name="position" aria-label="Position" required>
+                <option value="" <%= !achievement ? 'selected' : '' %>>Select Position</option>
+                <option value="1st" <%= achievement?.position === '1st' ? 'selected' : '' %>>1st</option>
+                <option value="2nd" <%= achievement?.position === '2nd' ? 'selected' : '' %>>2nd</option>
+                <option value="3rd" <%= achievement?.position === '3rd' ? 'selected' : '' %>>3rd</option>
+                <option value="completed" <%= achievement?.position === 'completed' ? 'selected' : '' %>>Completed</option>
+            </select>
+            
+
+            <label for="rewards">Rewards:</label>
+            <input type="text" id="rewards" name="rewards" value="<%= achievement ? achievement.rewards : '' %>" placeholder="Rewards" aria-label="Rewards" required>
+
+            <label for="certificates">Certificates/Medals/Trophy:</label>
+            <input type="file" id="certificates" name="certificates" aria-label="Certificates">
+
+            <label for="pictures">Pictures:</label>
+            <input type="file" id="pictures" name="pictures" aria-label="Pictures">
+
+            <div class="buttons">
+                <input type="submit" value="submit or update" >
+            </div>
+        </form>
+        <form action="/deleteachievement" method="POST">
+            <input type="hidden" name="name" value="<%= achievement?.name || '' %>">
+            <button type="submit" class="delete">Delete</button>
+        </form>
+    </div>
+
+    <script>
+    </script>
+</body>
+</html>

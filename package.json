@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.8.2",
+    "node": "^20.18.1",
+    "nodemon": "^3.1.7",
+    "path": "^0.12.7",
+    "url": "^0.11.4"
+  },
+  "type": "module",
+  "name": "project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon .\\src\\app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

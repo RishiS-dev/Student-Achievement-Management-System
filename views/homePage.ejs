@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Achievement Management</title>
+    <style>
+   
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    scroll-behavior: smooth;
+}
+
+.hero-section {
+    display: flex;
+    height: 100vh;
+    background: #4b95f4;
+    color: white;
+}
+
+.text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 50px;
+}
+
+.text-container h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.text-container p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+}
+
+.learn-more {
+    background-color: orange;
+    
+}
+
+.learn-more:hover {
+  background-color: white;
+  color: orange;
+}
+
+.login {
+    background-color: transparent;
+    border: 2px solid white;
+}
+
+.login:hover {
+  background-color: white;
+  color: #4b95f4;
+}
+
+.image-container {
+    flex: 1;
+    background: url('placeholder.png') no-repeat center center;
+    background-size: cover;
+}
+
+.summary-section {
+    padding: 50px;
+    background: #f5f5f5;
+    text-align: center;
+}
+
+.summary-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.summary-section p {
+    font-size: 1.2em;
+    max-width: 1000px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <div class="text-container">
+            <h1>Student Achievement Management System</h1>
+            <p>Effortlessly track and manage Student Achievements</p>
+            <div class="buttons">
+                <a href="#summary" class="btn learn-more">Learn More</a>
+                <a href="/loginpage" class="btn login">Login</a>
+            </div>
+        </div>
+        <div class="image-container"></div>
+    </div>
+    <section id="summary" class="summary-section">
+        <h2>About the System</h2>
+        <p>Student Achievement Management System (S.A.M.S)  is a web-based platform that aims to facilitate the tracking and
+          management of student achievement data. S.A.M.S allows students to manage their event
+          participation and accomplishments such as academic, extracurricular, and personal
+          achievements. Additionally, the students are assigned a regular or representative account where
+          representative accounts designated by the teachers have the ability to share notifications about
+          upcoming events.</p><br>
+          <p> S.A.M.S provides teachers acting as administrators with the ability to manage student data
+          and export data based on customized filters. The system allows for efficient tracking of student
+          achievement data promotes engagement among students and encourages them to take part in
+          events. </p>
+    </section>
+    <script>
+      document.querySelector('.learn-more').addEventListener('click', function (e) {
+          e.preventDefault(); 
+          document.querySelector('#summary').scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+          });
+      });
+  </script>
+  
+</body>
+</html>
