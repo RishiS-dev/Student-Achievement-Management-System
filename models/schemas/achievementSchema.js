@@ -66,11 +66,6 @@ achievementSchema.post('save', async function (doc) {
     }
 });
 
-achievementSchema.statics.studDash = async function (rollNumber) {
-    return await this.find({ rollNumber })
-        .select('_id achievementName date category position') 
-        .sort({ date: -1 }); 
-};
 
 const Achievement = mongoose.model('Achievement', achievementSchema);
 
