@@ -2,34 +2,51 @@ import mongoose from 'mongoose';
 import Profile from './profileSchema.js'; 
 
 const achievementSchema = new mongoose.Schema({
-    achievementName: { type: String, required: true }, 
-    date: { type: Date, required: true },             
-    position: { type: String, enum: ['1st', '2nd', '3rd', 'Participant', 'Other'], default: 'Participant' }, 
-    level: { type: String, enum: ['State', 'National', 'None'], default: 'None' }, 
-    rewards: { type: String, default: 'None' },       
-    organiser: { type: String, required: true },       
-    certificate: { type: String },                    
+    achievementName: { 
+        type: String, 
+        required: true 
+    }, 
+    date: { 
+        type: Date, 
+        required: true 
+    },             
+    position: { 
+        type: String, 
+        enum: ['1st', '2nd', '3rd', 'Participant', 'Other'], 
+        default: 'Participant' 
+    }, 
+    level: { 
+        type: String,
+         enum: ['State', 'National', 'None'], 
+         default: 'None' 
+    }, 
+    rewards: { 
+        type: String,
+        default: 'None' 
+    },       
+    organiser: { 
+        type: String, 
+        required: true 
+    },       
+    certificate: { 
+        type: String 
+    },                    
     category: {                                        
         type: String,
-        enum: [
-            'Sports',
-            'Symposium',
-            'Course',
-            'Internship',
-            'Hackathon',
-            'Cultural',
-            'Project',
-            'Research',
-            'Others'
-        ],
         required: true
     },
     rollNumber: {                                      
         type: String,
         required: true,
-        match: /^[0-9]{2}[A-Z]{1,2}[0-9]{3}$/ 
+        match: /^[0-9]{2}[A-Z]{1,2}[0-9]{3}$/,
+        uppercase: true,
     },
-    batch: { type: String, required: true, match: /^[0-9]{2}[A-Z]{1,2}G[0-9]$/ },
+    batch: { 
+        type: String, 
+        required: true, 
+        match: /^[0-9]{2}[A-Z]{1,2}G[0-9]$/,
+        uppercase: true,
+    },
 });
 
 achievementSchema.pre('findByIdAndDelete', async function (next) {

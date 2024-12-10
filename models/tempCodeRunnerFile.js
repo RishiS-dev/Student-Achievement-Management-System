@@ -1,0 +1,1 @@
+createStudent("24mx112@psgtech.ac.in","Manikandan","24MXG1","24MX112","G1","MCA").then(vla=>console.log(vla))

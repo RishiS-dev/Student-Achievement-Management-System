@@ -15,6 +15,7 @@ async function addAchievement(data) {
       category: data.category,
       rollNumber: data.rollNumber,
       batch: data.batch,
+      organiser:data.organiser
     });
 
     const savedAchievement = await newAchievement.save();
@@ -124,3 +125,15 @@ async function deleteAchievement(achievementId) {
   }
 }
 
+addAchievement({
+  achievementName: "Debuggin",
+  date: Date("12/10/2024"),
+  position: "1st",
+  level:"National",
+  rewards: "cash price", 
+  certificate: "certificate.pdf", 
+  category: "Symposium",
+  rollNumber: "24mx112",
+  batch: "24MXG1",
+  organiser : "KEC"
+})

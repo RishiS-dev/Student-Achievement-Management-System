@@ -47,3 +47,4 @@ async function updateProfile(rollNumber, github, leetcode) {
     throw error;
   }
 }
+

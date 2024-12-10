@@ -87,3 +87,4 @@ async function updatePassword(email, newPassword) {
 }
   
 
+createStudent("24mx118@psgtech.ac.in","Niresh","24MXG1","24MX182","G1","MCA").then(vla=>console.log(vla))

@@ -6,6 +6,7 @@ const profileSchema = new mongoose.Schema(
       type: String,
       required: true,
       match: /^[0-9]{2}[A-Z]{1,2}[0-9]{3}$/, 
+      uppercase: true,
     },
     name: {
       type: String,
@@ -14,15 +15,18 @@ const profileSchema = new mongoose.Schema(
     class: {
       type: String,
       required: true,
+      uppercase: true,
     },
     batch: {
       type: String,
       required: true,
       match: /^[0-9]{2}[A-Z]{1,2}G[0-9]$/,
+      uppercase: true,
     },
     department: {
       type: String,
       required: true,
+      uppercase: true,
     },
     achievements: [
       {
@@ -37,6 +41,10 @@ const profileSchema = new mongoose.Schema(
     leetcode: {
       type: String,
       default: '',
+    },
+    isRep: {
+      type: Boolean,
+      default: false, // Set default value to false
     },
   },
   { timestamps: true }
