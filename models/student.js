@@ -76,7 +76,6 @@ async function viewAchievement(achievementId) {
 
 async function updateAchievement(achievementId, updateObj) {
   try {
-    // Validate the input fields in updateObj
     const validFields = ['achievementName', 'date', 'rewards', 'certificate', 'category'];
     const updateData = {};
     
@@ -90,11 +89,10 @@ async function updateAchievement(achievementId, updateObj) {
       throw new Error('No valid fields provided for update.');
     }
 
-    // Update the achievement
     const updatedAchievement = await Achievement.findByIdAndUpdate(
       achievementId, 
       updateData, 
-      { new: true } // Return the updated document
+      { new: true } 
     ).select('_id achievementName date rewards certificate category');
 
     if (!updatedAchievement) {
@@ -109,4 +107,20 @@ async function updateAchievement(achievementId, updateObj) {
 
 }
 
+
+async function deleteAchievement(achievementId) {
+  try {
+
+    const deletedAchievement = await Achievement.findByIdAndDelete(achievementId);
+
+    if (!deletedAchievement) {
+      throw new Error('Achievement not found or already deleted.');
+    }
+
+    return true; 
+  } catch (error) {
+    console.error('Error deleting achievement:', error.message);
+    throw error;
+  }
+}
 
