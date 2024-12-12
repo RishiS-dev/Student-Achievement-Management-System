@@ -163,6 +163,7 @@ app.post('/addachievement',preventCache,async (req,res)=>{
         res.status(300).send("Error saving achievement")
     }
 });
+//this is to delete the achievements!
 
 app.post("/deleteachievement", preventCache, async (req, res) => {
     if (!req.session.user || req.session.user.type !== 'student') {
