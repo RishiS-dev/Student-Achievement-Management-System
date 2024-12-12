@@ -62,17 +62,18 @@
         </div>
     </div>
     <script>
-        document.getElementsByClassName("search-bar").addEventListener('input',function(){
-            const searchquery = this.value.toLowerCase();
-            const table = document.getElementById('achievement-table');
-            const rows = table.querySelectorAll('tbody tr')
+         // Search functionality
+         document.querySelector('.search-bar').addEventListener('input', function () {
+            const searchQuery = this.value.toLowerCase();
+            const table = document.querySelector('table');
+            const rows = table.querySelectorAll('tbody tr');
 
-            rows.forEach(rows =>{
-                const cells = Array.from(row.querySelectorAll('td'));
-                const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchQuery));
-                row.style.display = matches ? '':'none';
-            })
-        })
+        rows.forEach(row => {
+            const cells = Array.from(row.querySelectorAll('td'));
+            const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchQuery));
+                row.style.display = matches ? '' : 'none';
+            });
+        });
     </script>
 </body>
 </html>
