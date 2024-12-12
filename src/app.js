@@ -9,8 +9,9 @@ import { title } from 'process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const port = 8086;
+const port = process.env.PORT || 8086;
 const app = express();
+
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -200,6 +201,8 @@ app.get('/logout',(req,res)=>{
     });
 });
 
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
-})
+  });
+
+export default app;
