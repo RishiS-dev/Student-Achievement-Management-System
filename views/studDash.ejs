@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="samStyle.css">
 </head>
 <body>
+    <div class="logo-container">
+        <img src="./samsSlogan.png" alt="Logo" class="logo">
+    </div>    
     <div class="dashboard student-dashboard">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -63,7 +66,7 @@
     </div>
     <script>
          // Search functionality
-         document.querySelector('.search-bar').addEventListener('input', function () {
+        document.querySelector('.search-bar').addEventListener('input', function () {
             const searchQuery = this.value.toLowerCase();
             const table = document.querySelector('table');
             const rows = table.querySelectorAll('tbody tr');
@@ -73,7 +76,7 @@
             const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchQuery));
                 row.style.display = matches ? '' : 'none';
             });
-        });
+        }); 
     </script>
 </body>
 </html>
