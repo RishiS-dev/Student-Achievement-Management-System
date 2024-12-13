@@ -59,7 +59,6 @@ async function initProfileCreate(name, batch, rollNumber, className, department)
     });
 
     const savedProfile = await newProfile.save();
-    console.log('Profile created successfully:', savedProfile);
     return savedProfile._id;
   } catch (error) {
     console.error('Error creating profile:', error.message);
@@ -85,6 +84,5 @@ async function updatePassword(email, newPassword) {
       throw error;
     }
 }
-  
 
-createStudent("24mx118@psgtech.ac.in","Niresh","24MXG1","24MX182","G1","MCA").then(vla=>console.log(vla))
+export {authenticateStudent};

@@ -2,7 +2,7 @@ import connectDB from '../models/config/db.js';
 import bcrypt from 'bcrypt';
 import Staff from './schemas/staffSchema.js';
 
-async function staffAuth(email, password) {
+export async function staffAuth(email, password) {
     try {
       const staff = await Staff.findOne({ email });
       
@@ -48,10 +48,3 @@ async function updatePassword(email, newPassword) {
     }
 }
   
-(async () => {
-    const email = 'john.cse@psgtech.ac.in';
-    const newPassword = 'newSecurePassword123';
-  
-    const result = await updatePassword(email, newPassword);
-    console.log(result.message);
-  })();
