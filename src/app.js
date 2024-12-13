@@ -5,10 +5,13 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import session from "express-session";
 import { title } from "process";
+<<<<<<< Updated upstream
 import {login} from "../controllers/login.js";
 import { studentDashboard } from "../controllers/studentController.js";
 
 
+=======
+>>>>>>> Stashed changes
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -45,6 +48,7 @@ app.get("/loginpage", (req, res) => {
   res.render("login", { title: "Login Page" });
 });
 
+<<<<<<< Updated upstream
 app.post("/login", login);
 
 app.get("/teacher", preventCache, async (req, res) => {
@@ -89,6 +93,97 @@ app.get("/profile", preventCache, (req, res) => {
 });
 
 app.get("/student", preventCache, studentDashboard);
+=======
+app.post("/login", async (req, res) => {
+  try {
+    console.log(req.body);
+
+    const check = await collection.findOne({ username: req.body.username });
+
+    if (!check) {
+      res.render("login", { title: "login Page", error: "User not found!" });
+    } else {
+      req.session.user = { type: check.type, username: check.username };
+      if (req.body.password === check.password) {
+        if (check.type === "teacher") {
+          res.redirect("/teacher");
+        } else {
+          res.redirect("/student");
+        }
+      } else {
+        res.render("login", {
+          title: "login Page",
+          error: "Incorrect Password!",
+        });
+      }
+    }
+  } catch {
+    res.send("An error occurred during login.");
+  }
+});
+
+app.get("/teacher", preventCache, async (req, res) => {
+  if (!req.session.user || req.session.user.type !== "teacher") {
+    setTimeout(() => {
+      return res.redirect("/?error=not-logged-in");
+    }, 1000);
+    return;
+  }
+  try {
+    const achievements = await Achievements.find().sort({ date: -1 });
+    res.render("teachDash", {
+      title: "Teacher Dashboard",
+      username: req.session.user.username,
+      achievements,
+    });
+  } catch (err) {
+    res.status(500).send("Failed to fetch achievements");
+  }
+});
+
+app.get("/profile", preventCache, (req, res) => {
+  if (!req.session.user) {
+    setTimeout(() => {
+      return res.redirect("/?error=not-logged-in");
+    }, 1000);
+    return;
+  }
+  if (req.session.user.type === "teacher") {
+    res.render("teachProfile", {
+      title: "Profile Page",
+      username: req.session.user.username,
+      type: req.session.user.type,
+    });
+  } else {
+    res.render("studProfile", {
+      title: "Profile Page",
+      username: req.session.user.username,
+      type: req.session.user.type,
+    });
+  }
+});
+
+app.get("/student", preventCache, async (req, res) => {
+  if (!req.session.user || req.session.user.type !== "student") {
+    setTimeout(() => {
+      return res.redirect("/?error=not-logged-in");
+    }, 1000);
+    return;
+  }
+  try {
+    const achievements = await Achievements.find({
+      username: req.session.user.username,
+    }).sort({ date: -1 });
+    res.render("studDash", {
+      title: "Student Dashboard",
+      username: req.session.user.username,
+      achievements,
+    });
+  } catch (err) {
+    res.status(500).send("Failed to fetch achievements");
+  }
+});
+>>>>>>> Stashed changes
 
 app.get("/getAchieve", preventCache, async (req, res) => {
   if (!req.session.user) {
