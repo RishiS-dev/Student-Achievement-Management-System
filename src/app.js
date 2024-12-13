@@ -5,21 +5,20 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import session from "express-session";
 import { title } from "process";
-<<<<<<< Updated upstream
 import {login} from "../controllers/login.js";
 import { studentDashboard } from "../controllers/studentController.js";
 
 
-=======
->>>>>>> Stashed changes
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const port = process.env.PORT || 8086;
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
 app.set("view engine", "ejs");
 
@@ -48,7 +47,6 @@ app.get("/loginpage", (req, res) => {
   res.render("login", { title: "Login Page" });
 });
 
-<<<<<<< Updated upstream
 app.post("/login", login);
 
 app.get("/teacher", preventCache, async (req, res) => {
@@ -93,7 +91,6 @@ app.get("/profile", preventCache, (req, res) => {
 });
 
 app.get("/student", preventCache, studentDashboard);
-=======
 app.post("/login", async (req, res) => {
   try {
     console.log(req.body);
@@ -183,7 +180,6 @@ app.get("/student", preventCache, async (req, res) => {
     res.status(500).send("Failed to fetch achievements");
   }
 });
->>>>>>> Stashed changes
 
 app.get("/getAchieve", preventCache, async (req, res) => {
   if (!req.session.user) {
@@ -243,6 +239,7 @@ app.post("/addachievement", preventCache, async (req, res) => {
     res.status(300).send("Error saving achievement");
   }
 });
+//this is to delete the achievements!
 
 app.post("/deleteachievement", preventCache, async (req, res) => {
   if (!req.session.user || req.session.user.type !== "student") {
@@ -281,3 +278,8 @@ app.get("/logout", (req, res) => {
 app.listen(8086, () => {
   console.log("Server is running...");
 });
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+  });
+
+export default app;

@@ -76,7 +76,21 @@ body {
 /* General Styles */
 
 
+.logo-container {
+    position: absolute;
+    /* top: 10px; */
+    bottom: 690px;
+    right: 25px;
+    z-index: 10; /* Ensures it stays above other elements */
+    animation: forwards;
+    animation-duration: 2s;
+}
 
+.logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain; /* Ensures the logo maintains its aspect ratio */
+}
 
 .menu-toggle {
     position: absolute;

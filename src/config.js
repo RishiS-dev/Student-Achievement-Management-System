@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const connect = mongoose.connect('mongodb://localhost:27017/sams');
+const connect = mongoose.connect('mongodb+srv://samsadmin:admin1234@manikandan.hnwgo.mongodb.net/sams');
 
 connect
   .then(() => {
