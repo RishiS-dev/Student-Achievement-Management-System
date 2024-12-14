@@ -9,6 +9,7 @@ import { studentDashboard , displayStudProfile, updateStudProfile} from "../cont
 import { addAchievementController, achievementFormAdd, getEditAchieve, postEditAchieve, deleteAchieve } from "../controllers/studentAchievement.js";
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
+import { staffDash } from "../controllers/staff.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,6 +24,7 @@ app.use(express.urlencoded({extended:true}))
 app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "../public")));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use(
   session({
@@ -63,7 +65,7 @@ app.post("/addachievement",checkStudSession, upload.single('certificate'), addAc
 
 app.get('/editAchieve/:id', preventCache, checkStudSession, getEditAchieve);
 
-app.post('/editAchieve/:id', preventCache, checkStudSession, postEditAchieve);
+app.post('/editAchieve/:id', preventCache, checkStudSession, upload.single('certificate'), postEditAchieve);
 
 app.get('/deleteAchieve/:id', preventCache, checkStudSession, deleteAchieve);
 

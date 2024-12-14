@@ -1,0 +1,13 @@
+.logo {
+    max-height: 100px;
+}
+.sidebar {
+    min-height: 100vh;
+    border-right: 1px solid #ddd;
+}
+.nav-link {
+    color: #000;
+}
+.nav-link:hover {
+    text-decoration: underline;
+}

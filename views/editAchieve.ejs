@@ -95,7 +95,8 @@
                         <label for="certificate">Certificate</label>
                         <div class="certificate-container">
                             <% if (achievement.certificate) { %>
-                                <img src="<%= achievement.certificate %>" alt="Certificate" class="certificate-image">
+                                <img src="/<%= achievement.certificate.replace(/\\/g, '/') %>" alt="Certificate" class="certificate-image">
+
                             <% } else { %>
                                 <p>No certificate available</p>
                             <% } %>

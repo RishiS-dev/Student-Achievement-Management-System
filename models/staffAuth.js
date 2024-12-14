@@ -48,3 +48,38 @@ async function updatePassword(email, newPassword) {
     }
 }
   
+
+async function createStaff(staffData) {
+  try {
+    const existingStaff = await Staff.findOne({ email: staffData.email });
+    if (existingStaff) {
+      return { success: false, message: 'Email already exists. Please use a different email.' };
+    }
+
+    const newStaff = new Staff({
+      name: staffData.name,
+      email: staffData.email,
+      password: staffData.password, 
+      role: staffData.role,
+      department: staffData.department,
+      tutoring: staffData.tutoring || [],
+    });
+
+    await newStaff.save();
+
+    return { success: true, data: newStaff };
+  } catch (error) {
+    console.error('Error creating staff:', error.message);
+    return { success: false, message: 'Error creating staff. Please try again later.' };
+  }
+}
+
+// createStaff({
+//   name:"Rishi",
+//   email:"nire.mca@psgtech.ac.in",
+//   department : "mx",
+//   password : "rishi",
+//   role : "professor",
+
+// })
+

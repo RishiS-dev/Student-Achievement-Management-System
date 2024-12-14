@@ -62,8 +62,6 @@ export const achievementFormAdd = (req, res) => {
 export const getEditAchieve = async (req, res) => {
   try {
     const achievementId = req.params.id;  
-console.log("in EDIT ")
-    console.log(req.params)
  
     const achievement = await viewAchievement(achievementId); 
     console.log(achievement)
@@ -77,10 +75,15 @@ console.log("in EDIT ")
 
 export const postEditAchieve = async (req, res) => {
   try {
-    const { achievementName, date, category, position, level, rewards, organiser, certificate } = req.body;
+    const { achievementName, date, category, position, level, rewards, organiser } = req.body;
+
+    const certificate = req.file ? req.file.path : null;
+
     const achievementId = req.params.id; 
 
     const updateObj = { achievementName, date, category, position, level, rewards, organiser, certificate };
+
+    console.log(updateObj)
 
     const updatedAchievement = await updateAchievement(achievementId, updateObj); 
 
@@ -90,6 +93,9 @@ export const postEditAchieve = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+
+
 
 export const deleteAchieve = async (req, res) => {
   try {

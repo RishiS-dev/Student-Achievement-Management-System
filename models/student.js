@@ -65,28 +65,7 @@ export async function viewAchievement(achievementId) {
 
 export async function updateAchievement(achievementId, updateObj) {
   try {
-    const validFields = ['achievementName', 'date', 'rewards', 'certificate', 'category'];
-    const updateData = {};
-    
-    for (const key of Object.keys(updateObj)) {
-      if (validFields.includes(key)) {
-        updateData[key] = updateObj[key];
-      }
-    }
-
-    if (Object.keys(updateData).length === 0) {
-      throw new Error('No valid fields provided for update.');
-    }
-
-    const updatedAchievement = await Achievement.findByIdAndUpdate(
-      achievementId, 
-      updateData, 
-      { new: true } 
-    ).select('_id achievementName date rewards certificate category');
-
-    if (!updatedAchievement) {
-      throw new Error('Achievement not found or update failed.');
-    }
+    const updatedAchievement = await Achievement.findOneAndUpdate({_id:achievementId},updateObj)
 
     return updatedAchievement;
   } catch (error) {

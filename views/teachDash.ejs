@@ -4,72 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
-    <link rel="stylesheet" href="samStyle.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="teacherDashboard.css">
 </head>
 <body>
-    <div class="logo-container">
-        <img src="./samsSlogan.png" alt="Logo" class="logo">
-    </div> 
-    <div class="dashboard teacher-dashboard">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="menu-toggle">
-                <button class="menu-btn">☰</button>
-                <div class="menu-dropdown">
-                    <ul>
-                        <a href="/profile"><li>Profile</li></a>
-                        <a href="/teacher"><li>Dashboard</li></a>
-                        <a href="/logout"><li>Logout</li></a>
-                    </ul>
-                </div>
-            </div>
-
-            <h3>Upcoming Events</h3>
-            <div class="events-list">
+    <div class="container-fluid">
+        <!-- Logo Section -->
+        <div class="text-center my-4">
+            <img src="./samsSlogan.png" alt="Logo" class="logo img-fluid">
+        </div>
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar bg-light py-4">
+                <h3 class="text-center">Teacher Dashboard</h3>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a href="/profile" class="nav-link">Profile</a></li>
+                    <li class="nav-item"><a href="/teacher" class="nav-link">Dashboard</a></li>
+                    <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+                </ul>
+                <h4 class="mt-5">Upcoming Events</h4>
                 <p>No upcoming events</p>
             </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="header">
-                <h1>Teacher Dashboard</h1>
-            </header>
-
-            <div class="table-container">
-                <div class="table-header">
-                    <!-- Sort and Filter Buttons at the Top Right -->
-                    <div class="table-controls">
-                        <button class="sort-btn">Sort</button>
-                        <button class="filter-btn">Filter</button>
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <!-- Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form id="filter-form" class="row g-3">
+                            <div class="col-md-3">
+                                <label for="department" class="form-label">Department</label>
+                                <input type="text" id="department" name="department" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="category" class="form-label">Category</label>
+                                <input type="text" id="category" name="category" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="position" class="form-label">Position</label>
+                                <input type="text" id="position" name="position" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="level" class="form-label">Level</label>
+                                <input type="text" id="level" name="level" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="from-date" class="form-label">From Date</label>
+                                <input type="date" id="from-date" name="from" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="to-date" class="form-label">To Date</label>
+                                <input type="date" id="to-date" name="to" class="form-control">
+                            </div>
+                            <div class="col-md-12 text-end">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="scrollable-content">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sno</th>
-                                <th>Roll Number</th>
-                                <th>Achievement Name</th>
-                                <th>Achievement Date</th>
-                                <th>Achievement category</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% achievements.forEach((achievement,index)=>{%>
-                                <tr onclick="window.location.href='/getAchieve?id=<%= achievement._id%>'">
-                                    <td><%= index +1%></td>
-                                    <td><%= achievement.username%></td>
-                                    <td><%= achievement.name %></td>
-                                    <td><%= new Date(achievement.date).toLocaleDateString() %></td>
-                                    <td><%= achievement.category %></td>
+                <!-- Table -->
+                <div id="table-container" class="card">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Roll Number</th>
+                                    <th>Achievement Name</th>
+                                    <th>Achievement Date</th>
+                                    <th>Category</th>
                                 </tr>
-                            <% }); %> 
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody id="achievement-table-body">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                        <nav>
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- Populated by JavaScript -->
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="achievementModal" tabindex="-1" aria-labelledby="achievementModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="achievementModalLabel">Achievement Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Populated by JavaScript -->
+                    <div id="achievement-details"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="teacherDashboard.js"></script>
 </body>
 </html>
