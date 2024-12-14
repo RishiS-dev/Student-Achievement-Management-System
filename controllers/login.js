@@ -18,7 +18,12 @@ export async function login(req, res){
         const studentResponse = await authenticateStudent(email, password);
 
         if (studentResponse.success) {
-          req.session.rollno = studentResponse.student.rollno;
+
+          req.session.student = {
+            rollno : studentResponse.student.profile.rno,
+            batch : studentResponse.student.profile.batch
+          };
+
           return res.redirect('/student');
 
         } 
@@ -31,8 +36,11 @@ export async function login(req, res){
         const staffResponse = await staffAuth(email, password);
 
         if (staffResponse.success) {
-          req.session.department = staffResponse.staff.department;
-          req.session.name = staffResponse.staff.name;
+          req.session.staff = {
+            name : staffResponse.staff.name,
+            dep : staffResponse.staff.department,
+          }
+
           return res.redirect('/staff');
         } 
         else {

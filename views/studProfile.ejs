@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-    <link rel="stylesheet" href="profile.css">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="samStyle.css">
 </head>
 <body>
     <div class="logo-container">
         <img src="./samsSlogan.png" alt="Logo" class="logo">
-    </div> 
-    <div class="dashboard profile-dashboard">
+    </div>    
+    <div class="dashboard student-dashboard">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="menu-toggle">
                 <button class="menu-btn">☰</button>
                 <div class="menu-dropdown">
                     <ul>
-                        <a href="/profile"><li>Profile</li></a>
+                        <a href="/student/profile"><li>Profile</li></a>
                         <a href="/student"><li>Dashboard</li></a>
                         <a href="/logout"><li>Logout</li></a>
                     </ul>
@@ -33,20 +33,51 @@
         <!-- Main Content -->
         <div class="main-content">
             <header class="header">
-                <h1>Profile Page</h1>
+                <h1>Edit Profile</h1>
             </header>
 
-            <div class="profile-container">
-                <div class="profile-info">
-                    <h2>Personal Information</h2>
-                    <p><strong>Username:</strong><%=username%></p>
-                    <p><strong>Name:</strong> John Doe</p>
-                    <p><strong>Email:</strong> johndoe@example.com</p>
-                    <p><strong>Role:</strong><%=type%></p>
-                </div>
-                <div class="profile-actions">
-                    <button class="edit-btn">Edit Profile</button>
-                </div>
+            <div class="table-container">
+                <form action="/student/profile/update" method="POST">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Name</strong></td>
+                                <td><input type="text" name="name" value="<%= profile.name %>" readonly disabled></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Roll Number</strong></td>
+                                <td><input type="text" name="rno" value="<%= profile.rno %>" readonly disabled></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Department</strong></td>
+                                <td><input type="text" name="department" value="<%= profile.department %>" readonly disabled></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Class</strong></td>
+                                <td><input type="text" name="class" value="<%= profile.class %>" readonly disabled></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Batch</strong></td>
+                                <td><input type="text" name="batch" value="<%= profile.batch %>" readonly disabled></td>
+                            </tr>
+                            <tr>
+                                <td><strong>GitHub Profile</strong></td>
+                                <td><input type="url" name="github" value="<%= profile.github %>"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>LeetCode Profile</strong></td>
+                                <td><input type="url" name="leetcode" value="<%= profile.leetcode %>" ></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="submit" class="add-btn-stud">Update</button>
+                </form>
             </div>
         </div>
     </div>

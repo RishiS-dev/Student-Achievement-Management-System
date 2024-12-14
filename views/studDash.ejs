@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="samStyle.css">
+    <link rel="stylesheet" href="studDash.ejs">
+    <style>
+        /* Add custom CSS to reduce the size of the edit and delete icons */
+        .edit-icon, .delete-icon {
+            width: 20px; 
+            height: 20px; 
+            object-fit: contain; 
+            cursor: pointer;
+            margin-left: 10px; 
+        }
+
+        
+    </style>
 </head>
 <body>
     <div class="logo-container">
@@ -17,7 +30,7 @@
                 <button class="menu-btn">☰</button>
                 <div class="menu-dropdown">
                     <ul>
-                        <a href="/profile"><li>Profile</li></a>
+                        <a href="/student/profile"><li>Profile</li></a>
                         <a href="/student"><li>Dashboard</li></a>
                         <a href="/logout"><li>Logout</li></a>
                     </ul>
@@ -37,9 +50,6 @@
             </header>
 
             <div class="table-container">
-                <div class="table-header">
-                    <input type="text" placeholder="Search..." class="search-bar">
-                </div>
                 <table>
                     <thead>
                         <tr>
@@ -47,36 +57,33 @@
                             <th>Achievement Name</th>
                             <th>Achievement Date</th>
                             <th>Category</th>
+                            <th colspan="2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% achievements.forEach((achievement,index)=>{%>
-                            <tr onclick="window.location.href='/getAchieve?id=<%= achievement._id%>'">
-                                <td><%= index +1%></td>
-                                <td><%= achievement.name %></td>
+                        <% achievements.forEach((achievement, index) => { %>
+                            <tr data-id="<%= achievement._id %>" class="achievement-row">
+                                <td><%= index + 1 %></td>
+                                <td><%= achievement.achievementName %></td>
                                 <td><%= new Date(achievement.date).toLocaleDateString() %></td>
                                 <td><%= achievement.category %></td>
+                                <td class="action-icons">
+                                    <a href="/editAchieve/<%= achievement._id %>">
+                                        <img src="edit-icon.png" alt="Edit" class="edit-icon"> <!-- Edit Icon -->
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/deleteAchieve/<%= achievement._id %>">
+                                        <img src="delete-icon.png" alt="Delete" class="delete-icon"> <!-- Delete Icon -->
+                                    </a>
+                                </td>
                             </tr>
                         <% }); %>                            
                     </tbody>
                 </table>
-                <a href="/getAchieve"><button class="add-btn-stud">+</button></a>
+                <a href="/addachievement"><button class="add-btn-stud">+</button></a>
             </div>
         </div>
     </div>
-    <script>
-         // Search functionality
-        document.querySelector('.search-bar').addEventListener('input', function () {
-            const searchQuery = this.value.toLowerCase();
-            const table = document.querySelector('table');
-            const rows = table.querySelectorAll('tbody tr');
-
-        rows.forEach(row => {
-            const cells = Array.from(row.querySelectorAll('td'));
-            const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchQuery));
-                row.style.display = matches ? '' : 'none';
-            });
-        }); 
-    </script>
 </body>
 </html>

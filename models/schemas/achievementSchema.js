@@ -57,7 +57,6 @@ achievementSchema.pre('findByIdAndDelete', async function (next) {
                 { achievements: achievementId }, 
                 { $pull: { achievements: achievementId } }
             );
-            console.log(`Achievement with ID ${achievementId} removed from profiles.`);
             next(); 
         } catch (error) {
             console.error('Error updating profiles before achievement deletion:', error.message);
@@ -74,7 +73,6 @@ achievementSchema.post('save', async function (doc) {
         if (profile) {
             profile.achievements.push(doc._id); 
             await profile.save(); 
-            console.log(`Achievement ID ${doc._id} added to profile with roll number ${doc.rollNumber}`);
         } else {
             console.log(`Profile with roll number ${doc.rollNumber} not found.`);
         }

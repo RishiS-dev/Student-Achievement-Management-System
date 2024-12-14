@@ -1,14 +1,14 @@
 import express from "express";
-import { Achievements, collection } from "./config.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import session from "express-session";
 import { title } from "process";
 import {login} from "../controllers/login.js";
-import { studentDashboard } from "../controllers/studentController.js";
-
-
+import { studentDashboard , displayStudProfile, updateStudProfile} from "../controllers/studentController.js";
+import { addAchievementController, achievementFormAdd, getEditAchieve, postEditAchieve, deleteAchieve } from "../controllers/studentAchievement.js";
+import { upload } from '../middlewares/multerConfig.js';
+import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -43,228 +43,33 @@ const preventCache = (req, res, next) => {
 app.get("/", (req, res) => {
   res.render("homePage", { title: "Home Page" });
 });
+
+
+app.post("/login", login);
+
 app.get("/loginpage", (req, res) => {
   res.render("login", { title: "Login Page" });
 });
 
-app.post("/login", login);
+app.get("/student", preventCache, checkStudSession, studentDashboard);
 
-app.get("/teacher", preventCache, async (req, res) => {
-  if (!req.session.user || req.session.user.type !== "teacher") {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-  try {
-    const achievements = await Achievements.find().sort({ date: -1 });
-    res.render("teachDash", {
-      title: "Teacher Dashboard",
-      username: req.session.user.username,
-      achievements,
-    });
-  } catch (err) {
-    res.status(500).send("Failed to fetch achievements");
-  }
-});
+app.get("/student/profile",preventCache, checkStudSession, displayStudProfile);
 
-app.get("/profile", preventCache, (req, res) => {
-  if (!req.session.user) {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-  if (req.session.user.type === "teacher") {
-    res.render("teachProfile", {
-      title: "Profile Page",
-      username: req.session.user.username,
-      type: req.session.user.type,
-    });
-  } else {
-    res.render("studProfile", {
-      title: "Profile Page",
-      username: req.session.user.username,
-      type: req.session.user.type,
-    });
-  }
-});
+app.post("/student/profile/update",preventCache, checkStudSession, updateStudProfile);
 
-app.get("/student", preventCache, studentDashboard);
-app.post("/login", async (req, res) => {
-  try {
-    console.log(req.body);
+app.get("/addachievement",preventCache, checkStudSession, achievementFormAdd);
 
-    const check = await collection.findOne({ username: req.body.username });
+app.post("/addachievement",checkStudSession, upload.single('certificate'), addAchievementController,);
 
-    if (!check) {
-      res.render("login", { title: "login Page", error: "User not found!" });
-    } else {
-      req.session.user = { type: check.type, username: check.username };
-      if (req.body.password === check.password) {
-        if (check.type === "teacher") {
-          res.redirect("/teacher");
-        } else {
-          res.redirect("/student");
-        }
-      } else {
-        res.render("login", {
-          title: "login Page",
-          error: "Incorrect Password!",
-        });
-      }
-    }
-  } catch {
-    res.send("An error occurred during login.");
-  }
-});
+app.get('/editAchieve/:id', preventCache, checkStudSession, getEditAchieve);
 
-app.get("/teacher", preventCache, async (req, res) => {
-  if (!req.session.user || req.session.user.type !== "teacher") {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-  try {
-    const achievements = await Achievements.find().sort({ date: -1 });
-    res.render("teachDash", {
-      title: "Teacher Dashboard",
-      username: req.session.user.username,
-      achievements,
-    });
-  } catch (err) {
-    res.status(500).send("Failed to fetch achievements");
-  }
-});
+app.post('/editAchieve/:id', preventCache, checkStudSession, postEditAchieve);
 
-app.get("/profile", preventCache, (req, res) => {
-  if (!req.session.user) {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-  if (req.session.user.type === "teacher") {
-    res.render("teachProfile", {
-      title: "Profile Page",
-      username: req.session.user.username,
-      type: req.session.user.type,
-    });
-  } else {
-    res.render("studProfile", {
-      title: "Profile Page",
-      username: req.session.user.username,
-      type: req.session.user.type,
-    });
-  }
-});
+app.get('/deleteAchieve/:id', preventCache, checkStudSession, deleteAchieve);
 
-app.get("/student", preventCache, async (req, res) => {
-  if (!req.session.user || req.session.user.type !== "student") {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-  try {
-    const achievements = await Achievements.find({
-      username: req.session.user.username,
-    }).sort({ date: -1 });
-    res.render("studDash", {
-      title: "Student Dashboard",
-      username: req.session.user.username,
-      achievements,
-    });
-  } catch (err) {
-    res.status(500).send("Failed to fetch achievements");
-  }
-});
+app.get("/staff", preventCache, checkStaffSession)
 
-app.get("/getAchieve", preventCache, async (req, res) => {
-  if (!req.session.user) {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-  try {
-    const { id } = req.query;
-    let achievement = await Achievements.findOne({ _id: id });
 
-    res.render("addAchieve", {
-      title: "Achievement Details",
-      type: req.session.user.type,
-      achievement,
-    });
-  } catch (error) {
-    res.status(500).send("Failed to get achievement");
-  }
-});
-
-app.post("/addachievement", preventCache, async (req, res) => {
-  if (!req.session.user || req.session.user.type !== "student") {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-  const { name, date, category, level, position, rewards } = req.body;
-  const { username } = req.session.user;
-  try {
-    let achievement = await Achievements.findOne({ username, name });
-    if (achievement) {
-      achievement.date = date;
-      achievement.category = category;
-      achievement.level = level;
-      achievement.position = position;
-      achievement.rewards = rewards;
-
-      await achievement.save();
-    } else {
-      const newAchievement = new Achievements({
-        username,
-        name,
-        date,
-        category,
-        level,
-        position,
-        rewards,
-      });
-      await newAchievement.save();
-    }
-
-    return res.redirect("/student");
-  } catch (error) {
-    res.status(300).send("Error saving achievement");
-  }
-});
-//this is to delete the achievements!
-
-app.post("/deleteachievement", preventCache, async (req, res) => {
-  if (!req.session.user || req.session.user.type !== "student") {
-    setTimeout(() => {
-      return res.redirect("/?error=not-logged-in");
-    }, 1000);
-    return;
-  }
-
-  const { name } = req.body;
-
-  try {
-    const achievement = await Achievements.findOneAndDelete({
-      username: req.session.user.username,
-      name: name,
-    });
-    if (achievement) {
-      res.redirect("/student");
-    } else {
-      res.status(404).send("Achievement not found or already deleted");
-    }
-  } catch (error) {
-    res.status(500).send("Error while deleting achievement");
-  }
-});
 
 app.get("/logout", (req, res) => {
   req.session.destroy((err) => {
@@ -275,10 +80,8 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.listen(8086, () => {
-  console.log("Server is running...");
-});
-app.listen(port, () => {
+
+app.listen(3000, () => {
     console.log(`Server is running at http://localhost:${port}`);
   });
 

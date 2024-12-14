@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %></title>
+</head>
+<body>
+  <h1><%= pageTitle %></h1>
+  <form action="<%= formAction %>" method="POST" enctype="multipart/form-data">
+    <div>
+      <label for="achievementName">Achievement Name:</label>
+      <input type="text" id="achievementName" name="achievementName" required>
+    </div>
+    <div>
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required>
+    </div>
+    <div>
+      <label for="position">Position:</label>
+      <select id="position" name="position">
+        <option value="1st">1st</option>
+        <option value="2nd">2nd</option>
+        <option value="3rd">3rd</option>
+        <option value="Participant">Participant</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div>
+      <label for="level">Level:</label>
+      <select id="level" name="level">
+        <option value="State">State</option>
+        <option value="National">National</option>
+        <option value="None">None</option>
+      </select>
+    </div>
+    <div>
+      <label for="rewards">Rewards:</label>
+      <input type="text" id="rewards" name="rewards">
+    </div>
+    <div>
+      <label for="organiser">Organiser:</label>
+      <input type="text" id="organiser" name="organiser" required>
+    </div>
+    <div>
+      <label for="category">Category:</label>
+      <input type="text" id="category" name="category" required>
+    </div>
+    
+    <div>
+      <label for="certificate">Certificate (optional):</label>
+      <input type="file" id="certificate" name="certificate" accept=".pdf,.jpg,.png">
+    </div>
+    <button type="submit">Add Achievement</button>
+  </form>
+</body>
+</html>

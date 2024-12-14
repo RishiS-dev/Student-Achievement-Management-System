@@ -3,7 +3,7 @@ import Achievement from './schemas/achievementSchema.js';
 
 
 
-async function addAchievement(data) {
+export async function addAchievement(data) {
   try {
     const newAchievement = new Achievement({
       achievementName: data.achievementName,
@@ -19,7 +19,6 @@ async function addAchievement(data) {
     });
 
     const savedAchievement = await newAchievement.save();
-    console.log("Achievement added successfully:", savedAchievement);
     return savedAchievement; 
   } catch (error) {
     console.error("Error adding achievement:", error.message);
@@ -47,26 +46,15 @@ export async function fetchDashAchievements(rollNumber) {
 }
 
 
-async function viewAchievement(achievementId) {
+export async function viewAchievement(achievementId) {
   try {
-
     const achievement = await Achievement.findById(achievementId)
-      .select('achievementName date position level category rewards certificate'); 
     
     if (!achievement) {
       throw new Error('Achievement not found');
     }
 
-    return {
-      id: achievement._id,
-      name: achievement.achievementName,
-      date: achievement.date,
-      position: achievement.position,
-      level: achievement.level,
-      category: achievement.category,
-      reward: achievement.rewards,
-      certificate: achievement.certificate
-    };
+    return achievement;
 
   } catch (error) {
       console.error('Error fetching achievement:', error.message);
@@ -75,7 +63,7 @@ async function viewAchievement(achievementId) {
 }
 
 
-async function updateAchievement(achievementId, updateObj) {
+export async function updateAchievement(achievementId, updateObj) {
   try {
     const validFields = ['achievementName', 'date', 'rewards', 'certificate', 'category'];
     const updateData = {};
@@ -109,7 +97,7 @@ async function updateAchievement(achievementId, updateObj) {
 }
 
 
-async function deleteAchievement(achievementId) {
+export async function deleteAchievement(achievementId) {
   try {
 
     const deletedAchievement = await Achievement.findByIdAndDelete(achievementId);

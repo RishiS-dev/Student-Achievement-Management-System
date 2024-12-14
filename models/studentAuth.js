@@ -7,14 +7,13 @@ import Profile from './schemas/profileSchema.js';
 
 const authenticateStudent = async (email, password) => {
   try {
-    const student = await StudentAuth.findOne({ email: email });
+    const student = await StudentAuth.findOne({ email: email }).populate("profile");
 
     if (!student) {
       return { success: false, message: 'Student not found' };
     }
-
     const isPasswordMatch = await bcrypt.compare(password, student.password);
-
+  
     if (isPasswordMatch) {
       return { success: true, message: 'Authentication successful', student: student };
     } else {
@@ -85,4 +84,10 @@ async function updatePassword(email, newPassword) {
     }
 }
 
+//createStudent("24mx412@psgtech.ac.in","mani","24mxg1","24mx412","g1","ca").then(val=>console.log(val))
+
+//authenticateStudent("24mx412@psgtech.ac.in","24mx412").then(vla=>console.log(vla))
+
 export {authenticateStudent};
+
+// 24mx412
