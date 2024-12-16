@@ -13,7 +13,7 @@ export async function fetchFilteredAchievements(filters, page = 1, pageSize = 10
     if (filters.class) query.batch = { $regex: new RegExp(filters.class, 'i') };
     if (filters.year) query.batch = { $regex: new RegExp(`^${filters.year}`) }; 
 
-    const selectFields = filters.select && Array.isArray(filters.select) ? filters.select.join(' ') : '_id achievementName date category';
+    const selectFields = filters.select && Array.isArray(filters.select) ? filters.select.join(' ') : '_id achievementName date rollNumber category';
 
     const totalResults = await Achievement.countDocuments(query);
     const results = await Achievement.find(query)

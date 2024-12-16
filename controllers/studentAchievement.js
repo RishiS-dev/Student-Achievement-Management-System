@@ -95,8 +95,6 @@ export const postEditAchieve = async (req, res) => {
 };
 
 
-
-
 export const deleteAchieve = async (req, res) => {
   try {
     const achievementId = req.params.id;

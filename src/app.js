@@ -9,7 +9,7 @@ import { studentDashboard , displayStudProfile, updateStudProfile} from "../cont
 import { addAchievementController, achievementFormAdd, getEditAchieve, postEditAchieve, deleteAchieve } from "../controllers/studentAchievement.js";
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
-import { staffDash } from "../controllers/staff.js";
+import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard } from "../controllers/staff.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -69,8 +69,11 @@ app.post('/editAchieve/:id', preventCache, checkStudSession, upload.single('cert
 
 app.get('/deleteAchieve/:id', preventCache, checkStudSession, deleteAchieve);
 
-app.get("/staff", preventCache, checkStaffSession)
+app.get('/staff', preventCache, checkStaffSession, renderStaffDashboard); 
 
+app.get('/staff/fetchAchievements',preventCache, checkStaffSession, fetchAchievementsForTable); 
+
+app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal); 
 
 
 app.get("/logout", (req, res) => {

@@ -1,114 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="teacherDashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .sidebar {
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    .main-content {
+      margin-left: 25%;
+    }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 1rem;
+    }
+    .filter-card {
+      cursor: pointer;
+    }
+    .certificate-img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <!-- Logo Section -->
-        <div class="text-center my-4">
-            <img src="./samsSlogan.png" alt="Logo" class="logo img-fluid">
-        </div>
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 sidebar bg-light py-4">
-                <h3 class="text-center">Teacher Dashboard</h3>
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="/profile" class="nav-link">Profile</a></li>
-                    <li class="nav-item"><a href="/teacher" class="nav-link">Dashboard</a></li>
-                    <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-3 bg-light sidebar text-center py-4">
+        <img src="/assets/logo.png" alt="Logo" class="logo img-fluid">
+        <h3>Staff Dashboard</h3>
+        <ul class="nav flex-column mt-4">
+          <li class="nav-item"><a href="/profile" class="nav-link">Profile</a></li>
+          <li class="nav-item"><a href="/staff" class="nav-link active">Dashboard</a></li>
+          <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-9 main-content">
+        <div class="container py-4">
+          <!-- Filters -->
+          <div class="card filter-card mb-3">
+            <div class="card-header">
+              <h5 class="mb-0">Filters</h5>
+            </div>
+            <div class="card-body">
+              <form id="filter-form" class="row g-3">
+                <div class="col-md-4">
+                  <label for="category" class="form-label">Category</label>
+                  <select id="category" name="category" class="form-select">
+                    <option value="">All</option>
+                    <option value="Symposium">Symposium</option>
+                    <option value="Courses">Courses</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Publication">Publication</option>
+                    <option value="Hackathon">Hackathon</option>
+                    <option value="Conference">Conference</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="position" class="form-label">Position</label>
+                  <select id="position" name="position" class="form-select">
+                    <option value="">All</option>
+                    <option value="1st">1st</option>
+                    <option value="2nd">2nd</option>
+                    <option value="3rd">3rd</option>
+                    <option value="Participant">Participant</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="level" class="form-label">Level</label>
+                  <select id="level" name="level" class="form-select">
+                    <option value="">All</option>
+                    <option value="National">National</option>
+                    <option value="State">State</option>
+                    <option value="Nnone">None</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="from-date" class="form-label">From Date</label>
+                  <input type="date" id="from-date" name="from" class="form-control">
+                </div>
+                <div class="col-md-6">
+                  <label for="to-date" class="form-label">To Date</label>
+                  <input type="date" id="to-date" name="to" class="form-control">
+                </div>
+                <div class="col-md-12 text-end">
+                  <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div id="table-container" class="card">
+            <div class="card-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Roll Number</th>
+                    <th>Achievement</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                  </tr>
+                </thead>
+                <tbody id="achievement-table-body">
+                  <!-- Populated by JavaScript -->
+                </tbody>
+              </table>
+              <nav>
+                <ul class="pagination justify-content-center" id="pagination">
+                  <!-- Populated by JavaScript -->
                 </ul>
-                <h4 class="mt-5">Upcoming Events</h4>
-                <p>No upcoming events</p>
+              </nav>
             </div>
-            <!-- Main Content -->
-            <div class="col-md-9">
-                <!-- Filters -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <form id="filter-form" class="row g-3">
-                            <div class="col-md-3">
-                                <label for="department" class="form-label">Department</label>
-                                <input type="text" id="department" name="department" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="category" class="form-label">Category</label>
-                                <input type="text" id="category" name="category" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="position" class="form-label">Position</label>
-                                <input type="text" id="position" name="position" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="level" class="form-label">Level</label>
-                                <input type="text" id="level" name="level" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="from-date" class="form-label">From Date</label>
-                                <input type="date" id="from-date" name="from" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="to-date" class="form-label">To Date</label>
-                                <input type="date" id="to-date" name="to" class="form-control">
-                            </div>
-                            <div class="col-md-12 text-end">
-                                <button type="submit" class="btn btn-primary">Filter</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- Table -->
-                <div id="table-container" class="card">
-                    <div class="card-body">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Sno</th>
-                                    <th>Roll Number</th>
-                                    <th>Achievement Name</th>
-                                    <th>Achievement Date</th>
-                                    <th>Category</th>
-                                </tr>
-                            </thead>
-                            <tbody id="achievement-table-body">
-                                <!-- Populated by JavaScript -->
-                            </tbody>
-                        </table>
-                        <nav>
-                            <ul class="pagination justify-content-center" id="pagination">
-                                <!-- Populated by JavaScript -->
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="achievementModal" tabindex="-1" aria-labelledby="achievementModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="achievementModalLabel">Achievement Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Populated by JavaScript -->
-                    <div id="achievement-details"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
+  <!-- Modal -->
+  <div class="modal fade" id="achievementModal" tabindex="-1" aria-labelledby="achievementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="achievementModalLabel">Achievement Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body" id="achievement-details">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="teacherDashboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tableBody = document.getElementById('achievement-table-body');
+      const pagination = document.getElementById('pagination');
+      const modalDetails = document.getElementById('achievement-details');
+
+      function loadAchievements(filters = {}, page = 1) {
+        const params = new URLSearchParams({ ...filters, page }).toString();
+        fetch(`/staff/fetchAchievements?${params}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              tableBody.innerHTML = data.data.map((achievement, index) => `
+                <tr data-id="${achievement._id}">
+                  <td>${index + 1}</td>
+                  <td>${achievement.rollNumber}</td>
+                  <td>${achievement.achievementName}</td>
+                  <td>${new Date(achievement.date).toLocaleDateString()}</td>
+                  <td>${achievement.category}</td>
+                </tr>
+              `).join('');
+              
+              pagination.innerHTML = Array.from({ length: data.pagination.totalPages }, (_, i) => `
+                <li class="page-item ${i + 1 === data.pagination.currentPage ? 'active' : ''}">
+                  <a class="page-link" href="#" data-page="${i + 1}">${i + 1}</a>
+                </li>
+              `).join('');
+            }
+          });
+      }
+
+      tableBody.addEventListener('click', e => {
+        const row = e.target.closest('tr');
+        if (row) {
+          const id = row.dataset.id;
+          fetch(`/staff/achievement/${id}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                modalDetails.innerHTML = `
+                  <p><strong>Name:</strong> ${data.data.achievementName}</p>
+                  <p><strong>Roll Number:</strong> ${data.data.rollNumber}</p>
+                  <p><strong>Date:</strong> ${new Date(data.data.date).toLocaleDateString()}</p>
+                  <p><strong>Category:</strong> ${data.data.category}</p>
+                  <p><strong>Level:</strong> ${data.data.level}</p>
+                  <p><strong>Position:</strong> ${data.data.position}</p>
+                  <p><strong>Description:</strong> ${data.data.description || 'N/A'}</p>
+                  <img src="/${data.data.certificate}" alt="Certificate" class="certificate-img">
+                `;
+                new bootstrap.Modal(document.getElementById('achievementModal')).show();
+              }
+            });
+        }
+      });
+
+      document.getElementById('filter-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const filters = Object.fromEntries(formData.entries());
+        loadAchievements(filters);
+      });
+
+      pagination.addEventListener('click', e => {
+        const pageLink = e.target.closest('.page-link');
+        if (pageLink) {
+          e.preventDefault();
+          const page = parseInt(pageLink.dataset.page, 10);
+          loadAchievements({}, page);
+        }
+      });
+
+      loadAchievements();
+    });
+  </script>
 </body>
 </html>

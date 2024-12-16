@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("page", page);
 
         const response = await fetch("/fetchAchievements", {
-            method: "POST",
+            method: "GET",
             body: formData,
         });
 
