@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="samStyle.css">
-    <link rel="stylesheet" href="studDash.ejs">
     <style>
         /* Add custom CSS to reduce the size of the edit and delete icons */
         .edit-icon, .delete-icon {
@@ -14,6 +13,68 @@
             object-fit: contain; 
             cursor: pointer;
             margin-left: 10px; 
+        }
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .event-item span {
+            cursor: pointer;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; /* 10% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; /* Could be more or less, depending on screen size */
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-header {
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .modal-body p {
+            margin: 5px 0;
         }
 
         
@@ -38,7 +99,7 @@
             </div>
 
             <h3>Upcoming Events</h3>
-            <div class="events-list">
+            <div id="events-list">
                 <p>No upcoming events</p>
             </div>
         </div>
@@ -85,5 +146,188 @@
             </div>
         </div>
     </div>
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">Event Details</div>
+            <div class="modal-body">
+                <p><strong>Event Name:</strong> <span id="modal-event-name"></span></p>
+                <p><strong>Event Date:</strong> <span id="modal-event-date"></span></p>
+                <p><strong>Organizer:</strong> <span id="modal-event-organizer"></span></p>
+                <p><strong>Category:</strong> <span id="modal-event-category"></span></p>
+                <p><strong>Rewards:</strong> <span id="modal-event-rewards"></span></p>
+                <p><strong>Instructions:</strong> <span id="modal-instructions"></span></p>
+                <div id="file-container" style="display: none;">
+                    <strong>Uploaded File:</strong>
+                    <div id="modal-file-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <script>
+       async function displayEvents() {
+            try {
+                const response = await fetch('/api/events');
+                if (response.ok) {
+                    const events = await response.json();
+                    const eventsList = document.getElementById('events-list'); // Using ID selector
+
+                    eventsList.innerHTML = '';
+
+                    if (events.length === 0) {
+                        eventsList.innerHTML = '<p>No upcoming events</p>';
+                    } else {
+                        events.forEach((event) => {
+                            const eventItem = document.createElement('div');
+                            eventItem.classList.add('event-item');
+
+                            const eventText = document.createElement('span');
+                            eventText.textContent = `${event.eventName} (${new Date(event.eventDate).toLocaleDateString()}) - ${event.eventCategory}`;
+                            eventText.onclick = () => showEventDetails(event);
+
+                            eventItem.appendChild(eventText);
+                            eventsList.appendChild(eventItem);
+                        });
+                    }
+                } else {
+                    console.error('Failed to fetch events.');
+                    const eventsList = document.getElementById('events-list');
+                    eventsList.innerHTML = '<p>Error fetching events.</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                const eventsList = document.getElementById('events-list');
+                eventsList.innerHTML = '<p>Error fetching events.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', displayEvents);
+
+        function showEventDetails(event) {
+            // Populate modal with event details
+            document.getElementById('modalEventName').textContent = event.eventName;
+            document.getElementById('modalEventDate').textContent = new Date(event.eventDate).toLocaleDateString();
+            document.getElementById('modalEventOrganizer').textContent = event.eventOrganizer;
+            document.getElementById('modalEventCategory').textContent = event.eventCategory;
+            document.getElementById('modalEventDescription').textContent = event.description || 'N/A';
+
+            const fileContainer = document.getElementById('file-container');
+            const fileContent = document.getElementById('modal-file-content');
+
+            if (event.eventFile) {
+                fileContainer.style.display = 'block';
+
+                const fileURL = `/uploads/events/${event.eventFile}`;
+                const fileType = event.eventFileType;
+
+                if (fileType.startsWith('image/')) {
+                    fileContent.innerHTML = `<img src="${fileURL}" alt="Uploaded File" style="max-width: 100%; height: auto;">`;
+                } else if (fileType === 'application/pdf') {
+                    fileContent.innerHTML = `<iframe src="${fileURL}" style="width: 100%; height: 300px;"></iframe>`;
+                } else {
+                    fileContent.innerHTML = `<a href="${fileURL}" target="_blank" style="color: #32aaff;">Download File</a>`;
+                }
+            } else {
+                fileContainer.style.display = 'none';
+                fileContent.innerHTML = '';
+            }
+
+            // Display the modal
+            const modal = document.getElementById('eventModal');
+            modal.style.display = 'block';
+        }
+
+        // Close the modal when the user clicks on <span> (x)
+        document.querySelector('.close').onclick = function() {
+            const modal = document.getElementById('eventModal');
+            modal.style.display = 'none';
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('eventModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script> -->
+    <script>
+        async function displayEvents() {
+          try {
+            const response = await fetch('/api/events');
+            if (response.ok) {
+              const events = await response.json();
+              const eventsList = document.getElementById('events-list');
+      
+              eventsList.innerHTML = '';
+      
+              if (events.length === 0) {
+                eventsList.innerHTML = '<p>No upcoming events</p>';
+              } else {
+                events.forEach((event) => {
+                  const eventItem = document.createElement('div');
+                  eventItem.classList.add('event-item');
+      
+                  const eventText = document.createElement('span');
+                  eventText.textContent = `${event.eventName} (${new Date(event.eventDate).toLocaleDateString()}) - ${event.eventCategory}`;
+      
+                  eventText.onclick = () => showEventDetails(event);
+      
+                  eventItem.appendChild(eventText);
+                  eventsList.appendChild(eventItem);
+                });
+              }
+            } else {
+              console.error('Failed to fetch events.');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        function showEventDetails(event) {
+          document.getElementById('modal-event-name').textContent = event.eventName;
+          document.getElementById('modal-event-date').textContent = new Date(event.eventDate).toLocaleDateString();
+          document.getElementById('modal-event-organizer').textContent = event.eventOrganizer;
+          document.getElementById('modal-event-category').textContent = event.eventCategory;
+          document.getElementById('modal-event-rewards').textContent = event.eventRewards || 'N/A';
+          document.getElementById('modal-instructions').textContent = event.eventInstructions || 'N/A';
+      
+          const fileContainer = document.getElementById('file-container');
+          const fileContent = document.getElementById('modal-file-content');
+      
+          if (event.eventFile) {
+            fileContainer.style.display = 'block';
+            const fileURL = `/uploads/events/${event.eventFile}`;
+            const fileType = event.eventFileType;
+      
+            if (fileType.startsWith('image/')) {
+              fileContent.innerHTML = `<img src="${fileURL}" alt="Uploaded File" style="max-width: 100%; height: auto;">`;
+            } else if (fileType === 'application/pdf') {
+              fileContent.innerHTML = `<iframe src="${fileURL}" style="width: 100%; height: 300px;"></iframe>`;
+            } else {
+              fileContent.innerHTML = `<a href="${fileURL}" target="_blank" style="color: #32aaff;">Download File</a>`;
+            }
+          } else {
+            fileContainer.style.display = 'none';
+            fileContent.innerHTML = '';
+          }
+          document.getElementById('event-modal').style.display = 'block';
+        }
+      
+        document.querySelector('.modal-close').addEventListener('click', () => {
+          document.getElementById('event-modal').style.display = 'none';
+        });
+      
+        window.onclick = function(event) {
+          const modal = document.getElementById('event-modal');
+          if (event.target === modal) {
+            modal.style.display = 'none';
+          }
+        };
+      
+        document.addEventListener('DOMContentLoaded', displayEvents);
+      </script>
+      
 </body>
 </html>

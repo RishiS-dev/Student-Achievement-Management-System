@@ -1,14 +1,16 @@
 import { fetchDashAchievements } from '../models/student.js'; // Import the Achievements model
 import Profile from '../models/schemas/profileSchema.js';
+import Event from '../models/schemas/eventSchema.js';
 
 export const studentDashboard = async (req, res) => {
   try {
    
     const achievements = await fetchDashAchievements(req.session.student.rollno);
-
+    const events = await Event.find();
     res.render('studDash', {
       title: 'Student Dashboard',
       achievements, 
+      events,
     });
     
   } catch (error) {
@@ -16,6 +18,7 @@ export const studentDashboard = async (req, res) => {
     res.render('studDash', {
       title: 'Student Dashboard',
       achievements:[], 
+      events: [],
     });
   }
 };

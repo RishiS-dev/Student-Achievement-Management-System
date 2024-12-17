@@ -10,6 +10,8 @@ import { addAchievementController, achievementFormAdd, getEditAchieve, postEditA
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
 import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard } from "../controllers/staff.js";
+import { createEvent, getEvents } from '../controllers/eventController.js';
+import Event from "../models/schemas/eventSchema.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -74,6 +76,26 @@ app.get('/staff', preventCache, checkStaffSession, renderStaffDashboard);
 app.get('/staff/fetchAchievements',preventCache, checkStaffSession, fetchAchievementsForTable); 
 
 app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal); 
+
+app.get('/events', (req, res) => res.render('event'));
+app.get('/api/events', getEvents);
+
+// Delete Event Route
+app.delete('/api/events/:id', async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const deletedEvent = await Event.findByIdAndDelete(eventId);
+
+    if (!deletedEvent) {
+      return res.status(404).json({ message: 'Event not found.' });
+    }
+    res.status(200).json({ message: 'Event deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    res.status(500).json({ message: 'Error deleting event.' });
+  }
+});
+app.post('/events', upload.single('eventFile'), createEvent);
 
 
 app.get("/logout", (req, res) => {

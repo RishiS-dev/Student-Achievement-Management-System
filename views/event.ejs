@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Management</title>
-    <link rel="stylesheet" href="../public/samStyle.css">
+    <link href="samStyle.css" rel="stylesheet" type="text/css">
     <style>
         .form-container {
             margin: 50px auto;
@@ -231,7 +231,7 @@
     </div>    
 
     <script>
-       function saveEvent(event) {
+       async function saveEvent(event) {
     event.preventDefault();
 
     const eventName = document.getElementById('event-name').value.trim();
@@ -243,111 +243,141 @@
     const eventFile = document.getElementById('event-file').files[0];
 
     if (!eventName || !eventDate || !eventOrganizer || !eventCategory) {
-        alert("Please fill in all required fields!");
-        return;
+      alert("Please fill in all required fields!");
+      return;
     }
 
-    let fileURL = "";
-    let fileType = "";
+    const formData = new FormData();
+    formData.append('eventName', eventName);
+    formData.append('eventDate', eventDate);
+    formData.append('eventOrganizer', eventOrganizer);
+    formData.append('eventCategory', eventCategory);
+    formData.append('eventRewards', eventRewards);
+    formData.append('eventInstructions', instructions);
     if (eventFile) {
-        fileURL = URL.createObjectURL(eventFile);
-        fileType = eventFile.type;
+      formData.append('eventFile', eventFile);
     }
 
-    const events = JSON.parse(localStorage.getItem('events')) || [];
-    events.push({
-        name: eventName,
-        date: eventDate,
-        organizer: eventOrganizer,
-        category: eventCategory,
-        rewards: eventRewards,
-        instructions,
-        fileURL,
-        fileType
-    });
-    localStorage.setItem('events', JSON.stringify(events));
+    try {
+      const response = await fetch('/events', {
+        method: 'POST',
+        body: formData,
+      });
 
-    displayEvents();
-    document.querySelector('form').reset();
-}
+      if (response.ok) {
+        alert('Event saved successfully.');
+        displayEvents();
+        document.querySelector('form').reset();
+      } else {
+        const errorData = await response.json();
+        alert('Error saving event: ' + errorData.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while saving the event.');
+    }
+  }
 
-function displayEvents() {
-    const eventsList = document.getElementById('upcoming-events');
-    const events = JSON.parse(localStorage.getItem('events')) || [];
+  document.querySelector('form').addEventListener('submit', saveEvent);
 
-    eventsList.innerHTML = '';
+  async function displayEvents() {
+    try {
+      const response = await fetch('/api/events');
+      if (response.ok) {
+        const events = await response.json();
+        const eventsList = document.getElementById('upcoming-events');
 
-    if (events.length === 0) {
-        eventsList.innerHTML = '<p>No upcoming events</p>';
-    } else {
-        events.forEach((event, index) => {
+        eventsList.innerHTML = '';
+
+        if (events.length === 0) {
+          eventsList.innerHTML = '<p>No upcoming events</p>';
+        } else {
+          events.forEach((event) => {
             const eventItem = document.createElement('div');
             eventItem.classList.add('event-item');
 
             const eventText = document.createElement('span');
-            eventText.textContent = `${event.name} (${new Date(event.date).toLocaleDateString()}) - ${event.category}`;
-            eventText.onclick = () => showEventDetails(index);
+            eventText.textContent = `${event.eventName} (${new Date(event.eventDate).toLocaleDateString()}) - ${event.eventCategory}`;
+            eventText.onclick = () => showEventDetails(event);
 
-            const deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('delete-btn');
-            deleteBtn.textContent = "Delete";
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation();
-                deleteEvent(index);
-            };
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.classList.add('delete-btn');
+            deleteButton.onclick = () => deleteEvent(event._id);
 
             eventItem.appendChild(eventText);
-            eventItem.appendChild(deleteBtn);
+            eventItem.appendChild(deleteButton);
             eventsList.appendChild(eventItem);
-        });
+          });
+        }
+      } else {
+        console.error('Failed to fetch events.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
-}
+  }
 
-function showEventDetails(index) {
-    const events = JSON.parse(localStorage.getItem('events')) || [];
-    const event = events[index];
+  document.addEventListener('DOMContentLoaded', displayEvents);
 
-    document.getElementById('modal-event-name').textContent = event.name;
-    document.getElementById('modal-event-date').textContent = new Date(event.date).toLocaleDateString();
-    document.getElementById('modal-event-organizer').textContent = event.organizer;
-    document.getElementById('modal-event-category').textContent = event.category;
-    document.getElementById('modal-event-rewards').textContent = event.rewards || "N/A";
-    document.getElementById('modal-instructions').textContent = event.instructions || "N/A";
+  function showEventDetails(event) {
+    document.getElementById('modal-event-name').textContent = event.eventName;
+    document.getElementById('modal-event-date').textContent = new Date(event.eventDate).toLocaleDateString();
+    document.getElementById('modal-event-organizer').textContent = event.eventOrganizer;
+    document.getElementById('modal-event-category').textContent = event.eventCategory;
+    document.getElementById('modal-event-rewards').textContent = event.eventRewards || 'N/A';
+    document.getElementById('modal-instructions').textContent = event.eventInstructions || 'N/A';
 
     const fileContainer = document.getElementById('file-container');
     const fileContent = document.getElementById('modal-file-content');
 
-    if (event.fileURL) {
-        fileContainer.style.display = "block";
+    if (event.eventFile) {
+      fileContainer.style.display = 'block';
 
-        if (event.fileType.startsWith("image/")) {
-            fileContent.innerHTML = `<img src="${event.fileURL}" alt="Uploaded File" style="max-width: 100%; height: auto;">`;
-        } else if (event.fileType === "application/pdf") {
-            fileContent.innerHTML = `<iframe src="${event.fileURL}" style="width: 100%; height: 300px;"></iframe>`;
-        } else {
-            fileContent.innerHTML = `<a href="${event.fileURL}" target="_blank" style="color: #32aaff;">Download File</a>`;
-        }
+      const fileURL = `/uploads/events/${event.eventFile}`;
+      const fileType = event.eventFileType;
+
+      if (fileType.startsWith('image/')) {
+        fileContent.innerHTML = `<img src="${fileURL}" alt="Uploaded File" style="max-width: 100%; height: auto;">`;
+      } else if (fileType === 'application/pdf') {
+        fileContent.innerHTML = `<iframe src="${fileURL}" style="width: 100%; height: 300px;"></iframe>`;
+      } else {
+        fileContent.innerHTML = `<a href="${fileURL}" target="_blank" style="color: #32aaff;">Download File</a>`;
+      }
     } else {
-        fileContainer.style.display = "none";
-        fileContent.innerHTML = "";
+      fileContainer.style.display = 'none';
+      fileContent.innerHTML = '';
     }
 
     document.getElementById('event-modal').style.display = 'block';
-}
+  }
 
-function deleteEvent(index) {
-    const events = JSON.parse(localStorage.getItem('events')) || [];
-    events.splice(index, 1);
-    localStorage.setItem('events', JSON.stringify(events));
-    displayEvents();
-}
+  async function deleteEvent(eventId) {
+    if (!confirm('Are you sure you want to delete this event?')) return;
+
+    try {
+      const response = await fetch(`/api/events/${eventId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        alert('Event deleted successfully.');
+        displayEvents(); 
+      } else {
+        const errorData = await response.json();
+        alert('Error deleting event: ' + errorData.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while deleting the event.');
+    }
+  }
 
 document.querySelector('form').addEventListener('submit', saveEvent);
 document.querySelector('.modal-close').addEventListener('click', () => {
     document.getElementById('event-modal').style.display = 'none';
 });
 
-window.onload = displayEvents;
     </script>
 </body>
 </html>
