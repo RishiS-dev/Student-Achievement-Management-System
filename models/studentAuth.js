@@ -5,7 +5,7 @@ import Profile from './schemas/profileSchema.js';
 
 
 
-const authenticateStudent = async (email, password) => {
+export const authenticateStudent = async (email, password) => {
   try {
     const student = await StudentAuth.findOne({ email: email }).populate("profile");
 
@@ -66,7 +66,7 @@ async function initProfileCreate(name, batch, rollNumber, className, department)
 }
 
 
-async function updatePassword(email, newPassword) {
+export async function updatePassword(email, newPassword) {
     try {
       const student = await StudentAuth.findOne({ email });
       if (!student) {
@@ -88,6 +88,5 @@ async function updatePassword(email, newPassword) {
 
 //authenticateStudent("24mx412@psgtech.ac.in","24mx412").then(vla=>console.log(vla))
 
-export {authenticateStudent};
 
 // 24mx412

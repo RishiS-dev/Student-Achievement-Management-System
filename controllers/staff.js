@@ -1,5 +1,6 @@
 import { fetchFilteredAchievements } from "../models/staff.js";
 import { viewAchievement } from "../models/student.js";
+import Staff from "../models/schemas/staffSchema.js"
 
 export const renderStaffDashboard = (req, res) => {
   try {
@@ -43,11 +44,13 @@ export const fetchAchievementDetailsForModal = async (req, res) => {
       return res.status(400).json({ message: "Achievement ID is required" });
     }
 
+
     const achievement = await viewAchievement(id);
 
-    achievement.certificate = achievement.certificate.replace(/\\/g, '/');
+    if(achievement.certificate){
+      achievement.certificate = achievement.certificate.replace(/\\/g, '/');
+    }
 
-    console.log(achievement)
 
     if (!achievement) {
       return res.status(404).json({ message: "Achievement not found" });
@@ -59,3 +62,22 @@ export const fetchAchievementDetailsForModal = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+
+
+export async function getStaffProfile(req, res) {
+  try {
+    const staffId = req.session.staff.id; 
+    
+
+    const staff = await Staff.findById(staffId).select('-password'); 
+    if (!staff) {
+      return res.status(404).send('Staff member not found.');
+    }
+
+    res.render('staffProfile', { staff });
+  } catch (error) {
+    console.error('Error fetching staff profile:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Profile</title>
+  <link href="/samStyles.css" rel="stylesheet"> <!-- Link to custom stylesheet -->
+</head>
+<body>
+  
+  <div class="container mt-5">
+    <!-- Profile Heading -->
+    <div class="card">
+      <div class="card-header text-center header">
+        <h2>Staff Profile</h2>
+      </div>
+      <div class="card-body">
+        <!-- Staff Details -->
+        <div class="mb-3">
+          <strong>Name:</strong> <span><%= staff.name %></span>
+        </div>
+        <div class="mb-3">
+          <strong>Email:</strong> <span><%= staff.email %></span>
+        </div>
+        <div class="mb-3">
+          <strong>Role:</strong> <span><%= staff.role %></span>
+        </div>
+        <div class="mb-3">
+          <strong>Department:</strong> <span><%= staff.department %></span>
+        </div>
+
+        <!-- GitHub & LeetCode Links -->
+        <div class="mb-3">
+          <strong>GitHub:</strong> <a href="<%= staff.github %>" target="_blank"><%= staff.github %></a>
+        </div>
+        <div class="mb-3">
+          <strong>LeetCode:</strong> <a href="<%= staff.leetcode %>" target="_blank"><%= staff.leetcode %></a>
+        </div>
+
+        <!-- Reset Password Button -->
+        <div class="mb-3">
+          <form action="/resetPassword" method="GET">
+            <button type="submit" class="submit-btn">Change Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

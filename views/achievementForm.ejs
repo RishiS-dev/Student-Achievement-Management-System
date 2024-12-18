@@ -4,54 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= pageTitle %></title>
+  <link rel="stylesheet" href="/samStyle.css">
 </head>
 <body>
-  <h1><%= pageTitle %></h1>
-  <form action="<%= formAction %>" method="POST" enctype="multipart/form-data">
-    <div>
-      <label for="achievementName">Achievement Name:</label>
-      <input type="text" id="achievementName" name="achievementName" required>
-    </div>
-    <div>
-      <label for="date">Date:</label>
-      <input type="date" id="date" name="date" required>
-    </div>
-    <div>
-      <label for="position">Position:</label>
-      <select id="position" name="position">
-        <option value="1st">1st</option>
-        <option value="2nd">2nd</option>
-        <option value="3rd">3rd</option>
-        <option value="Participant">Participant</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-    <div>
-      <label for="level">Level:</label>
-      <select id="level" name="level">
-        <option value="State">State</option>
-        <option value="National">National</option>
-        <option value="None">None</option>
-      </select>
-    </div>
-    <div>
-      <label for="rewards">Rewards:</label>
-      <input type="text" id="rewards" name="rewards">
-    </div>
-    <div>
-      <label for="organiser">Organiser:</label>
-      <input type="text" id="organiser" name="organiser" required>
-    </div>
-    <div>
-      <label for="category">Category:</label>
-      <input type="text" id="category" name="category" required>
-    </div>
-    
-    <div>
-      <label for="certificate">Certificate (optional):</label>
-      <input type="file" id="certificate" name="certificate" accept=".pdf,.jpg,.png">
-    </div>
-    <button type="submit">Add Achievement</button>
-  </form>
+  <%- include('Studmenu') %>
+  <div class="main-content">
+    <h1 class="header"><%= pageTitle %></h1>
+
+    <!-- Achievement Form -->
+    <form action="<%= formAction %>" method="POST" enctype="multipart/form-data" class="achievement-form">
+      <!-- Achievement Name -->
+      <div class="form-group">
+        <label for="achievementName">Achievement Name:</label>
+        <input type="text" id="achievementName" name="achievementName" class="form-control" required>
+      </div>
+
+      <!-- Date -->
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" class="form-control" required>
+      </div>
+
+      <!-- Position -->
+      <div class="form-group">
+        <label for="position">Position:</label>
+        <select id="position" name="position" class="form-control">
+          <option value="">Select Position</option>
+          <option value="1st">1st</option>
+          <option value="2nd">2nd</option>
+          <option value="3rd">3rd</option>
+          <option value="Participant">Participant</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Level -->
+      <div class="form-group">
+        <label for="level">Level:</label>
+        <select id="level" name="level" class="form-control">
+          <option value="">Select Level</option>
+          <option value="National">National</option>
+          <option value="State">State</option>
+          <option value="None">None</option>
+        </select>
+      </div>
+
+      <!-- Rewards -->
+      <div class="form-group">
+        <label for="rewards">Rewards:</label>
+        <input type="text" id="rewards" name="rewards" class="form-control">
+      </div>
+
+      <!-- Organiser -->
+      <div class="form-group">
+        <label for="organiser">Organiser:</label>
+        <input type="text" id="organiser" name="organiser" class="form-control" required>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select id="category" name="category" class="form-control" required>
+          <option value="">Select Category</option>
+          <option value="Symposium">Symposium</option>
+          <option value="Courses">Courses</option>
+          <option value="Sports">Sports</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Publication">Publication</option>
+          <option value="Hackathon">Hackathon</option>
+          <option value="Conference">Conference</option>
+        </select>
+      </div>
+
+      <!-- Certificate Upload -->
+      <div class="form-group">
+        <label for="certificate">Certificate (optional):</label>
+        <input type="file" id="certificate" name="certificate" class="form-control" accept=".pdf,.jpg,.png">
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+        <button type="submit" class="submit-btn">Add Achievement</button>
+      </div>
+    </form>
+  </div>
 </body>
 </html>

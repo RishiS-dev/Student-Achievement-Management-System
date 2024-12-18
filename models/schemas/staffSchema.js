@@ -19,7 +19,6 @@ const staffSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-    //   enum: ['Professor', 'HOD', 'Staff'],
       required: true,
     },
     department: {
@@ -36,7 +35,6 @@ const staffSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Pre-save hook to hash password when storing or updating
 staffSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     const salt = await bcrypt.genSalt(10);

@@ -1,7 +1,11 @@
 import { fetchDashAchievements } from '../models/student.js'; // Import the Achievements model
 import Profile from '../models/schemas/profileSchema.js';
+<<<<<<< Updated upstream
 import Event from '../models/schemas/eventSchema.js';
 
+=======
+import { updatePassword } from '../models/studentAuth.js';
+>>>>>>> Stashed changes
 export const studentDashboard = async (req, res) => {
   try {
    
@@ -59,4 +63,16 @@ export async function updateStudProfile(req, res) {
       console.error('Error updating profile:', error.message);
       
   }
+}
+
+export async function resetPassword(req, res) {
+  const { newPassword } = req.body;
+    const email = req.session.student.rollno + "@domain.com"; // Construct email from rollno
+
+    try {
+        const updatedStudent = await updatePassword(email, newPassword);
+        res.redirect('/student/profile');
+    } catch (error) {
+        res.status(500).send('Error resetting password');
+    }
 }

@@ -34,13 +34,14 @@ export async function login(req, res){
       } else if (staffEmailRegex.test(email)) {
 
         const staffResponse = await staffAuth(email, password);
+        
 
         if (staffResponse.success) {
           req.session.staff = {
-            name : staffResponse.staff.name,
+            id : staffResponse.staff.id,
             dep : staffResponse.staff.department,
           }
-
+          
           return res.redirect('/staff');
         } 
         else {

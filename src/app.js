@@ -5,14 +5,19 @@ import { dirname } from "path";
 import session from "express-session";
 import { title } from "process";
 import {login} from "../controllers/login.js";
-import { studentDashboard , displayStudProfile, updateStudProfile} from "../controllers/studentController.js";
+import { studentDashboard , displayStudProfile, updateStudProfile, resetPassword} from "../controllers/studentController.js";
 import { addAchievementController, achievementFormAdd, getEditAchieve, postEditAchieve, deleteAchieve } from "../controllers/studentAchievement.js";
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
+<<<<<<< Updated upstream
 import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard } from "../controllers/staff.js";
 import { createEvent, getEvents } from '../controllers/eventController.js';
 import Event from "../models/schemas/eventSchema.js";
 
+=======
+import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard, getStaffProfile } from "../controllers/staff.js";
+import { getStudentsByBatch, resetStudentPassword, getStudentDetailsPage } from "../controllers/tutor.js";
+>>>>>>> Stashed changes
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -77,6 +82,7 @@ app.get('/staff/fetchAchievements',preventCache, checkStaffSession, fetchAchieve
 
 app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal); 
 
+<<<<<<< Updated upstream
 app.get('/events', (req, res) => res.render('event'));
 app.get('/api/events', getEvents);
 
@@ -96,6 +102,22 @@ app.delete('/api/events/:id', async (req, res) => {
   }
 });
 app.post('/events', upload.single('eventFile'), createEvent);
+=======
+app.get("/staff/profile", preventCache, checkStaffSession, getStaffProfile);
+
+app.post('/tutorAccess', preventCache, checkStaffSession, getStudentsByBatch);
+
+app.post('/resetStudPassword', preventCache,checkStaffSession, resetStudentPassword);
+
+app.get('/studentDetails/:id', preventCache, checkStaffSession, getStudentDetailsPage);
+
+app.get('/resetStudPassword', (req, res) => {
+  res.render('resetPassword');
+});
+
+app.post('/resetPassword', preventCache, checkStudSession, resetPassword);
+
+>>>>>>> Stashed changes
 
 
 app.get("/logout", (req, res) => {
@@ -109,7 +131,7 @@ app.get("/logout", (req, res) => {
 
 
 app.listen(3000, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:3000`);
   });
 
 export default app;

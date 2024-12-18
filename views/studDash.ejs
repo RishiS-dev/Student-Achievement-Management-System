@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
+<<<<<<< Updated upstream
     <link rel="stylesheet" href="samStyle.css">
+=======
+    <link rel="stylesheet" href="/samStyle.css">
+>>>>>>> Stashed changes
     <style>
         /* Add custom CSS to reduce the size of the edit and delete icons */
         .edit-icon, .delete-icon {
@@ -93,6 +97,7 @@
                     <ul>
                         <a href="/student/profile"><li>Profile</li></a>
                         <a href="/student"><li>Dashboard</li></a>
+                        <a href="/resetStudPassword"><li>Reset Password</li></a>
                         <a href="/logout"><li>Logout</li></a>
                     </ul>
                 </div>
@@ -130,12 +135,12 @@
                                 <td><%= achievement.category %></td>
                                 <td class="action-icons">
                                     <a href="/editAchieve/<%= achievement._id %>">
-                                        <img src="edit-icon.png" alt="Edit" class="edit-icon"> <!-- Edit Icon -->
+                                        <img src="/edit-icon.png" alt="Edit" class="edit-icon"> <!-- Edit Icon -->
                                     </a>
                                 </td>
                                 <td>
                                     <a href="/deleteAchieve/<%= achievement._id %>">
-                                        <img src="delete-icon.png" alt="Delete" class="delete-icon"> <!-- Delete Icon -->
+                                        <img src="/delete-icon.png" alt="Delete" class="delete-icon"> <!-- Delete Icon -->
                                     </a>
                                 </td>
                             </tr>
@@ -330,4 +335,4 @@
       </script>
       
 </body>
-</html>
+</html> 

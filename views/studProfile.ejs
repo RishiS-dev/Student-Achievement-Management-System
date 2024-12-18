@@ -3,82 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
-    <link rel="stylesheet" href="samStyle.css">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/samStyle.css">
 </head>
 <body>
-    <div class="logo-container">
-        <img src="./samsSlogan.png" alt="Logo" class="logo">
-    </div>    
-    <div class="dashboard student-dashboard">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="menu-toggle">
-                <button class="menu-btn">☰</button>
-                <div class="menu-dropdown">
-                    <ul>
-                        <a href="/student/profile"><li>Profile</li></a>
-                        <a href="/student"><li>Dashboard</li></a>
-                        <a href="/logout"><li>Logout</li></a>
-                    </ul>
-                </div>
-            </div>
+    <%-include("Studmenu")%>
+    <div class="main-content">
+        <header class="header">
+            <h1>Profile</h1>
+        </header>
 
-            <h3>Upcoming Events</h3>
-            <div class="events-list">
-                <p>No upcoming events</p>
-            </div>
+        <div class="table-container">
+            <form action="/student/profile/update" method="POST">
+                
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="name"><strong>Name</strong></label>
+                    <input type="text" id="name" name="name" value="<%= profile.name %>" class="form-control" readonly disabled>
+                </div>
+
+                <!-- Roll Number Field -->
+                <div class="form-group">
+                    <label for="rno"><strong>Roll Number</strong></label>
+                    <input type="text" id="rno" name="rno" value="<%= profile.rno %>" class="form-control" readonly disabled>
+                </div>
+
+                <!-- Department Field -->
+                <div class="form-group">
+                    <label for="department"><strong>Department</strong></label>
+                    <input type="text" id="department" name="department" value="<%= profile.department %>" class="form-control" readonly disabled>
+                </div>
+
+                <!-- Class Field -->
+                <div class="form-group">
+                    <label for="class"><strong>Class</strong></label>
+                    <input type="text" id="class" name="class" value="<%= profile.class %>" class="form-control" readonly disabled>
+                </div>
+
+                <!-- Batch Field -->
+                <div class="form-group">
+                    <label for="batch"><strong>Batch</strong></label>
+                    <input type="text" id="batch" name="batch" value="<%= profile.batch %>" class="form-control" readonly disabled>
+                </div>
+
+                <!-- GitHub Profile -->
+                <div class="form-group">
+                    <label for="github"><strong>GitHub Profile</strong></label>
+                    <input type="url" id="github" name="github" value="<%= profile.github %>" class="form-control">
+                </div>
+
+                <!-- LeetCode Profile -->
+                <div class="form-group">
+                    <label for="leetcode"><strong>LeetCode Profile</strong></label>
+                    <input type="url" id="leetcode" name="leetcode" value="<%= profile.leetcode %>" class="form-control">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit" class="submit-btn">Update Profile</button>
+                </div>
+            </form>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="header">
-                <h1>Edit Profile</h1>
-            </header>
-
-            <div class="table-container">
-                <form action="/student/profile/update" method="POST">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Field</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Name</strong></td>
-                                <td><input type="text" name="name" value="<%= profile.name %>" readonly disabled></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Roll Number</strong></td>
-                                <td><input type="text" name="rno" value="<%= profile.rno %>" readonly disabled></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Department</strong></td>
-                                <td><input type="text" name="department" value="<%= profile.department %>" readonly disabled></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Class</strong></td>
-                                <td><input type="text" name="class" value="<%= profile.class %>" readonly disabled></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Batch</strong></td>
-                                <td><input type="text" name="batch" value="<%= profile.batch %>" readonly disabled></td>
-                            </tr>
-                            <tr>
-                                <td><strong>GitHub Profile</strong></td>
-                                <td><input type="url" name="github" value="<%= profile.github %>"></td>
-                            </tr>
-                            <tr>
-                                <td><strong>LeetCode Profile</strong></td>
-                                <td><input type="url" name="leetcode" value="<%= profile.leetcode %>" ></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button type="submit" class="add-btn-stud">Update</button>
-                </form>
-            </div>
+        <!-- Button to open change password form -->
+        <div class="reset-password-container">
+            <a href="/student/profile/resetPassword" class="reset-password-btn">Change Password</a>
         </div>
     </div>
 </body>

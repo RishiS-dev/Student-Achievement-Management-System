@@ -1,13 +1,21 @@
-.logo {
-    max-height: 100px;
-}
 .sidebar {
-    min-height: 100vh;
-    border-right: 1px solid #ddd;
-}
-.nav-link {
-    color: #000;
-}
-.nav-link:hover {
-    text-decoration: underline;
-}
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  .main-content {
+    margin-left: 25%;
+  }
+  .logo {
+    max-width: 150px;
+    margin-bottom: 1rem;
+  }
+  .filter-card {
+    cursor: pointer;
+  }
+  .certificate-img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 1rem;
+  }
