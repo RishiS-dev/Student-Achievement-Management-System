@@ -9,15 +9,11 @@ import { studentDashboard , displayStudProfile, updateStudProfile, resetPassword
 import { addAchievementController, achievementFormAdd, getEditAchieve, postEditAchieve, deleteAchieve } from "../controllers/studentAchievement.js";
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
-<<<<<<< Updated upstream
-import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard } from "../controllers/staff.js";
 import { createEvent, getEvents } from '../controllers/eventController.js';
 import Event from "../models/schemas/eventSchema.js";
 
-=======
 import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard, getStaffProfile } from "../controllers/staff.js";
 import { getStudentsByBatch, resetStudentPassword, getStudentDetailsPage } from "../controllers/tutor.js";
->>>>>>> Stashed changes
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -82,7 +78,6 @@ app.get('/staff/fetchAchievements',preventCache, checkStaffSession, fetchAchieve
 
 app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal); 
 
-<<<<<<< Updated upstream
 app.get('/events', (req, res) => res.render('event'));
 app.get('/api/events', getEvents);
 
@@ -102,7 +97,6 @@ app.delete('/api/events/:id', async (req, res) => {
   }
 });
 app.post('/events', upload.single('eventFile'), createEvent);
-=======
 app.get("/staff/profile", preventCache, checkStaffSession, getStaffProfile);
 
 app.post('/tutorAccess', preventCache, checkStaffSession, getStudentsByBatch);
@@ -117,7 +111,6 @@ app.get('/resetStudPassword', (req, res) => {
 
 app.post('/resetPassword', preventCache, checkStudSession, resetPassword);
 
->>>>>>> Stashed changes
 
 
 app.get("/logout", (req, res) => {

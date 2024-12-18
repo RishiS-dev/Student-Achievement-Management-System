@@ -1,11 +1,8 @@
 import { fetchDashAchievements } from '../models/student.js'; // Import the Achievements model
 import Profile from '../models/schemas/profileSchema.js';
-<<<<<<< Updated upstream
 import Event from '../models/schemas/eventSchema.js';
 
-=======
 import { updatePassword } from '../models/studentAuth.js';
->>>>>>> Stashed changes
 export const studentDashboard = async (req, res) => {
   try {
    
