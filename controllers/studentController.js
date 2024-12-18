@@ -64,8 +64,8 @@ export async function updateStudProfile(req, res) {
 
 export async function resetPassword(req, res) {
   const { newPassword } = req.body;
-    const email = req.session.student.rollno + "@domain.com"; // Construct email from rollno
-
+    const email = req.session.student.rollno + "@psgtech.ac.in"; // Construct email from rollno
+    console.log(email,newPassword)
     try {
         const updatedStudent = await updatePassword(email, newPassword);
         res.redirect('/student/profile');

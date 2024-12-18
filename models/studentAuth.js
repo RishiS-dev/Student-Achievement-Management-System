@@ -68,14 +68,16 @@ async function initProfileCreate(name, batch, rollNumber, className, department)
 
 export async function updatePassword(email, newPassword) {
     try {
-      const student = await StudentAuth.findOne({ email });
+      const student = await StudentAuth.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
       if (!student) {
         throw new Error("Student with the provided email does not exist.");
       }
   
       student.password = newPassword;
+      console.log(student)
   
       const updatedStudent = await student.save();
+
       
       return updatedStudent;
     } catch (error) {

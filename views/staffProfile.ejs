@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Staff Profile</title>
-  <link href="/samStyles.css" rel="stylesheet"> <!-- Link to custom stylesheet -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  
+  <%-include("staffMenu")%>
   <div class="container mt-5">
     <!-- Profile Heading -->
     <div class="card">
-      <div class="card-header text-center header">
+      <div class="card-header text-center">
         <h2>Staff Profile</h2>
       </div>
       <div class="card-body">
@@ -29,22 +29,27 @@
           <strong>Department:</strong> <span><%= staff.department %></span>
         </div>
 
-        <!-- GitHub & LeetCode Links -->
+        <!-- Tutoring Batches as Buttons -->
         <div class="mb-3">
-          <strong>GitHub:</strong> <a href="<%= staff.github %>" target="_blank"><%= staff.github %></a>
-        </div>
-        <div class="mb-3">
-          <strong>LeetCode:</strong> <a href="<%= staff.leetcode %>" target="_blank"><%= staff.leetcode %></a>
-        </div>
-
-        <!-- Reset Password Button -->
-        <div class="mb-3">
-          <form action="/resetPassword" method="GET">
-            <button type="submit" class="submit-btn">Change Password</button>
-          </form>
+          <strong>Tutoring Batches:</strong>
+          <div>
+            <% if (staff.tutoring.length > 0) { %>
+              <% staff.tutoring.forEach((batch) => { %>
+                <form action="/tutorAccess" method="POST" style="display: inline-block;">
+                  <input type="hidden" name="batch" value="<%= batch %>">
+                  <button type="submit" class="btn btn-primary m-1"><%= batch %></button>
+                </form>
+              <% }); %>
+            <% } else { %>
+              <p>No batches assigned.</p>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

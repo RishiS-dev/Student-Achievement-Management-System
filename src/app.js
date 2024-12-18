@@ -12,7 +12,7 @@ import { checkStaffSession, checkStudSession } from "../middlewares/sessionManag
 import { createEvent, getEvents } from '../controllers/eventController.js';
 import Event from "../models/schemas/eventSchema.js";
 
-import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard, getStaffProfile } from "../controllers/staff.js";
+import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard, getStaffProfile, resetStaffPassword } from "../controllers/staff.js";
 import { getStudentsByBatch, resetStudentPassword, getStudentDetailsPage } from "../controllers/tutor.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -78,11 +78,11 @@ app.get('/staff/fetchAchievements',preventCache, checkStaffSession, fetchAchieve
 
 app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal); 
 
-app.get('/events', (req, res) => res.render('event'));
-app.get('/api/events', getEvents);
+app.get('/events', preventCache, checkStaffSession, (req, res) => res.render('event'));
 
-// Delete Event Route
-app.delete('/api/events/:id', async (req, res) => {
+app.get('/api/events', preventCache, checkStaffSession, getEvents);
+
+app.delete('/api/events/:id', preventCache,checkStaffSession, async (req, res) => {
   try {
     const eventId = req.params.id;
     const deletedEvent = await Event.findByIdAndDelete(eventId);
@@ -96,7 +96,9 @@ app.delete('/api/events/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting event.' });
   }
 });
+
 app.post('/events', upload.single('eventFile'), createEvent);
+
 app.get("/staff/profile", preventCache, checkStaffSession, getStaffProfile);
 
 app.post('/tutorAccess', preventCache, checkStaffSession, getStudentsByBatch);
@@ -105,11 +107,17 @@ app.post('/resetStudPassword', preventCache,checkStaffSession, resetStudentPassw
 
 app.get('/studentDetails/:id', preventCache, checkStaffSession, getStudentDetailsPage);
 
-app.get('/resetStudPassword', (req, res) => {
+app.get('/student/resetpassword', (req, res) => {
   res.render('resetPassword');
 });
 
-app.post('/resetPassword', preventCache, checkStudSession, resetPassword);
+app.post('/student/resetpassword', preventCache, checkStaffSession, resetPassword);
+
+app.get('/staff/resetpassword', (req, res) => {
+  res.render('resetPassword');
+});
+
+app.post('/staff/resetpassword', preventCache, checkStaffSession, resetStaffPassword);
 
 
 

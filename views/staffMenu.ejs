@@ -1,0 +1,89 @@
+<style>
+    body {
+      overflow-x: hidden;
+    }
+  
+    .menu {
+      position: fixed;
+      top: 50px; /* Adjusts position relative to toggle button */
+      left: 15px;
+      width: 200px;
+      background-color: #f8f9fa;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      display: none; /* Hidden by default */
+      z-index: 1000;
+    }
+  
+    .menu.visible {
+      display: block; /* Show menu */
+    }
+  
+    .menu ul {
+      list-style: none;
+      padding: 10px;
+      margin: 0;
+    }
+  
+    .menu ul li {
+      margin-bottom: 10px;
+    }
+  
+    .menu ul li:last-child {
+      margin-bottom: 0;
+    }
+  
+    .menu ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-size: 16px;
+      display: block;
+      padding: 5px 10px;
+      border-radius: 3px;
+      transition: background-color 0.2s;
+    }
+  
+    .menu ul li a:hover {
+      background-color: #e9ecef;
+    }
+  
+    .toggle-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      z-index: 1100; /* Ensure button stays above menu */
+      cursor: pointer;
+    }
+  </style>
+<div>
+    <button class="toggle-btn" id="toggleMenu">☰</button>
+  </div>
+  <div class="menu" id="menu">
+    <ul>
+      <li><a href="/staff/profile">Profile</a></li>
+      <li><a href="/staff" class="active">Dashboard</a></li>
+      <li><a href="/events">Events</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </div>
+  <script>
+    document.getElementById("toggleMenu").addEventListener("click", function () {
+      const menu = document.getElementById("menu");
+      menu.classList.toggle("visible");
+    });
+  
+    // Optional: Close the menu when clicking outside it
+    document.addEventListener("click", function (event) {
+      const menu = document.getElementById("menu");
+      const toggleButton = document.getElementById("toggleMenu");
+      if (!menu.contains(event.target) && event.target !== toggleButton) {
+        menu.classList.remove("visible");
+      }
+    });
+  </script>
+      

@@ -1,7 +1,7 @@
 import { fetchFilteredAchievements } from "../models/staff.js";
 import { viewAchievement } from "../models/student.js";
-import Staff from "../models/schemas/staffSchema.js"
-
+import Staff from "../models/schemas/staffSchema.js";
+import { updatePassword } from "../models/staffAuth.js";
 export const renderStaffDashboard = (req, res) => {
   try {
     res.render("teachDash", {
@@ -44,13 +44,11 @@ export const fetchAchievementDetailsForModal = async (req, res) => {
       return res.status(400).json({ message: "Achievement ID is required" });
     }
 
-
     const achievement = await viewAchievement(id);
 
-    if(achievement.certificate){
-      achievement.certificate = achievement.certificate.replace(/\\/g, '/');
+    if (achievement.certificate) {
+      achievement.certificate = achievement.certificate.replace(/\\/g, "/");
     }
-
 
     if (!achievement) {
       return res.status(404).json({ message: "Achievement not found" });
@@ -63,21 +61,29 @@ export const fetchAchievementDetailsForModal = async (req, res) => {
   }
 };
 
-
-
 export async function getStaffProfile(req, res) {
   try {
-    const staffId = req.session.staff.id; 
-    
+    const staffId = req.session.staff.id;
 
-    const staff = await Staff.findById(staffId).select('-password'); 
+    const staff = await Staff.findById(staffId).select("-password");
     if (!staff) {
-      return res.status(404).send('Staff member not found.');
+      return res.status(404).send("Staff member not found.");
     }
 
-    res.render('staffProfile', { staff });
+    res.render("staffProfile", { staff });
   } catch (error) {
-    console.error('Error fetching staff profile:', error.message);
-    res.status(500).send('Internal Server Error');
+    console.error("Error fetching staff profile:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+export async function resetStaffPassword(req, res) {
+  const { newPassword } = req.body;
+  const id = req.session.staff.id;
+  try {
+    const updatedStudent = await updatePassword(id, newPassword);
+    res.redirect("/staff/profile");
+  } catch (error) {
+    res.status(500).send("Error resetting password");
   }
 }

@@ -1,152 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staff Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< Updated upstream
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-  <style>
-    .sidebar {
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
-    .main-content {
-      margin-left: 25%;
-    }
-    .logo {
-      max-width: 150px;
-      margin-bottom: 1rem;
-    }
-    .filter-card {
-      cursor: pointer;
-    }
-    .certificate-img {
-      max-width: 100%;
-      height: auto;
-      margin-top: 1rem;
-    }
-  </style>
-=======
-  <link rel="stylesheet" href="/teacherDashboard.css">
->>>>>>> Stashed changes
-</head>
-<body>
-  <div class="container-fluid">
-    <div class="row">
-  
-      <div class="col-md-3 bg-light sidebar text-center py-4">
-        <img src="/assets/logo.png" alt="Logo" class="logo img-fluid">
-        <h3>Staff Dashboard</h3>
-        <ul class="nav flex-column mt-4">
-          <li class="nav-item"><a href="/staff/profile" class="nav-link">Profile</a></li>
-          <li class="nav-item"><a href="/staff" class="nav-link active">Dashboard</a></li>
-          <li class="nav-item"><a href="/events" class="nav-link active">Events</a></li>
-          <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
-        </ul>
-      </div>
+    <style>
+      body {
+        overflow-x: hidden; /* Prevent horizontal scroll when sidebar is hidden */
+      }
 
-      <!-- Main Content -->
-      <div class="col-md-9 main-content">
-        <div class="container py-4">
-          <!-- Filters -->
-          <div class="card filter-card mb-3">
-            <div class="card-header">
-              <h5 class="mb-0">Filters</h5>
+      .sidebar {
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        background-color: #f8f9fa;
+        overflow-y: auto;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .sidebar.hidden {
+        transform: translateX(-100%);
+      }
+
+      .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        transition: margin-left 0.3s ease-in-out;
+      }
+
+      .main-content.shifted {
+        margin-left: 0;
+      }
+
+      .toggle-btn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        z-index: 1000; /* Ensure toggle button stays on top */
+        cursor: pointer;
+      }
+
+      .main-content .container {
+        margin-top: 50px; /* Ensure content starts below the toggle button */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <%-include("staffMenu")%>
+      <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-12 main-content shifted" id="mainContent">
+          <div class="container py-4">
+            <!-- Filters -->
+            <div class="card filter-card mb-3">
+              <div class="card-header">
+                <h5 class="mb-0">Filters</h5>
+              </div>
+              <div class="card-body">
+                <form id="filter-form" class="row g-3">
+                  <div class="col-md-4">
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" name="category" class="form-select">
+                      <option value="">All</option>
+                      <option value="Symposium">Symposium</option>
+                      <option value="Courses">Courses</option>
+                      <option value="Sports">Sports</option>
+                      <option value="Workshop">Workshop</option>
+                      <option value="Publication">Publication</option>
+                      <option value="Hackathon">Hackathon</option>
+                      <option value="Conference">Conference</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="position" class="form-label">Position</label>
+                    <select id="position" name="position" class="form-select">
+                      <option value="">All</option>
+                      <option value="1st">1st</option>
+                      <option value="2nd">2nd</option>
+                      <option value="3rd">3rd</option>
+                      <option value="Participant">Participant</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="level" class="form-label">Level</label>
+                    <select id="level" name="level" class="form-select">
+                      <option value="">All</option>
+                      <option value="National">National</option>
+                      <option value="State">State</option>
+                      <option value="None">None</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="from-date" class="form-label">From Date</label>
+                    <input
+                      type="date"
+                      id="from-date"
+                      name="from"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="to-date" class="form-label">To Date</label>
+                    <input
+                      type="date"
+                      id="to-date"
+                      name="to"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-12 text-end">
+                    <button type="submit" class="btn btn-primary">
+                      Apply Filters
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-            <div class="card-body">
-              <form id="filter-form" class="row g-3">
-                <div class="col-md-4">
-                  <label for="category" class="form-label">Category</label>
-                  <select id="category" name="category" class="form-select">
-                    <option value="">All</option>
-                    <option value="Symposium">Symposium</option>
-                    <option value="Courses">Courses</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Workshop">Workshop</option>
-                    <option value="Publication">Publication</option>
-                    <option value="Hackathon">Hackathon</option>
-                    <option value="Conference">Conference</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="position" class="form-label">Position</label>
-                  <select id="position" name="position" class="form-select">
-                    <option value="">All</option>
-                    <option value="1st">1st</option>
-                    <option value="2nd">2nd</option>
-                    <option value="3rd">3rd</option>
-                    <option value="Participant">Participant</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="level" class="form-label">Level</label>
-                  <select id="level" name="level" class="form-select">
-                    <option value="">All</option>
-                    <option value="National">National</option>
-                    <option value="State">State</option>
-                    <option value="Nnone">None</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="from-date" class="form-label">From Date</label>
-                  <input type="date" id="from-date" name="from" class="form-control">
-                </div>
-                <div class="col-md-6">
-                  <label for="to-date" class="form-label">To Date</label>
-                  <input type="date" id="to-date" name="to" class="form-control">
-                </div>
-                <div class="col-md-12 text-end">
-                  <button type="submit" class="btn btn-primary">Apply Filters</button>
-                </div>
-              </form>
-            </div>
-          </div>
 
-          <div id="table-container" class="card">
-            <div class="card-body">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Roll Number</th>
-                    <th>Achievement</th>
-                    <th>Date</th>
-                    <th>Category</th>
-                  </tr>
-                </thead>
-                <tbody id="achievement-table-body">
-                  
-                </tbody>
-              </table>
-              <nav>
-                <ul class="pagination justify-content-center" id="pagination">
-                 
-                </ul>
-              </nav>
+            <div id="table-container" class="card">
+              <div class="card-body">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Roll Number</th>
+                      <th>Achievement</th>
+                      <th>Date</th>
+                      <th>Category</th>
+                    </tr>
+                  </thead>
+                  <tbody id="achievement-table-body"></tbody>
+                </table>
+                <nav>
+                  <ul
+                    class="pagination justify-content-center"
+                    id="pagination"
+                  ></ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="modal fade" id="achievementModal" tabindex="-1" aria-labelledby="achievementModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="achievementModalLabel">Achievement Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="achievement-details">
+
+    <div
+      class="modal fade"
+      id="achievementModal"
+      tabindex="-1"
+      aria-labelledby="achievementModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="achievementModalLabel">
+              Achievement Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="achievement-details"></div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/teacherDashboard.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="teacherDashboard.js"></script>
+  </body>
 </html>

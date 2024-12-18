@@ -25,19 +25,13 @@ export async function staffAuth(email, password) {
   }
   
 
-async function updatePassword(email, newPassword) {
+export async function updatePassword(id, newPassword) {
     try {
-      // Find the staff member by email
-      const staff = await Staff.findOne({ email });
+      const staff = await Staff.findById(id);
       if (!staff) {
         return { success: false, message: 'Staff member not found.' };
       }
   
-      // Hash the new password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(newPassword, salt);
-  
-      // Update the password and save the document
       staff.password = hashedPassword;
       await staff.save();
   
