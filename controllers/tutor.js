@@ -1,5 +1,5 @@
 import StudentAuth from "../models/schemas/studentAuthSchema.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 import Profile from "../models/schemas/profileSchema.js";
 

@@ -1,5 +1,5 @@
 import connectDB from '../models/config/db.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import StudentAuth from './schemas/studentAuthSchema.js';  
 import Profile from './schemas/profileSchema.js';  
 

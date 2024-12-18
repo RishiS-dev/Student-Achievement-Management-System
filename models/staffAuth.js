@@ -1,5 +1,5 @@
 import connectDB from '../models/config/db.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import Staff from './schemas/staffSchema.js';
 
 export async function staffAuth(email, password) {
