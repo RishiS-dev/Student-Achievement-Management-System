@@ -80,7 +80,7 @@ app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievem
 
 app.get('/events', preventCache, checkStaffSession, (req, res) => res.render('event'));
 
-app.get('/api/events', preventCache, getEvents);
+app.get('/api/events', preventCache, checkStaffSession, getEvents);
 
 app.get("/tutorAccess",(req,res)=>{
   res.redirect("/staff/profile");
