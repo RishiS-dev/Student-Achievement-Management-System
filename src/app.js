@@ -82,10 +82,6 @@ app.get('/events', preventCache, checkStaffSession, (req, res) => res.render('ev
 
 app.get('/api/events', preventCache, checkStaffSession, getEvents);
 
-app.get("/tutorAccess",(req,res)=>{
-  res.redirect("/staff/profile");
-})
-
 app.delete('/api/events/:id', preventCache,checkStaffSession, async (req, res) => {
   try {
     const eventId = req.params.id;
