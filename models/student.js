@@ -1,4 +1,3 @@
-import connectDB from '../models/config/db.js';
 import Achievement from './schemas/achievementSchema.js';
 
 

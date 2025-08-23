@@ -1,4 +1,3 @@
-import connectDB from '../models/config/db.js';
 import bcrypt from 'bcryptjs';
 import StudentAuth from './schemas/studentAuthSchema.js';  
 import Profile from './schemas/profileSchema.js';  
@@ -26,7 +25,7 @@ export const authenticateStudent = async (email, password) => {
 };
 
 
-async function createStudent(email, name, batch, rollNumber, className, department) {
+export async function createStudent(email, name, batch, rollNumber, className, department) {
 
   const profile = await initProfileCreate(name, batch, rollNumber, className, department)
   try {

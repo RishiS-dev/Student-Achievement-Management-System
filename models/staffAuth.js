@@ -1,4 +1,3 @@
-import connectDB from '../models/config/db.js';
 import bcrypt from 'bcryptjs';
 import Staff from './schemas/staffSchema.js';
 
@@ -43,7 +42,7 @@ export async function updatePassword(id, newPassword) {
 }
   
 
-async function createStaff(staffData) {
+export async function createStaff(staffData) {
   try {
     const existingStaff = await Staff.findOne({ email: staffData.email });
     if (existingStaff) {
@@ -67,6 +66,7 @@ async function createStaff(staffData) {
     return { success: false, message: 'Error creating staff. Please try again later.' };
   }
 }
+
 
 // createStaff({
 //   name:"Rishi",

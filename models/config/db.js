@@ -1,14 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-const connectDB = mongoose.connect("mongodb+srv://samsadmin:admin1234@manikandan.hnwgo.mongodb.net/sams");
+dotenv.config();
 
-connectDB
-  .then(() => {
-    console.log("db connected");
-  })
-  .catch(() => {
-    console.log("db not connected");
-  });
-
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB Atlas Connected");
+  } catch (error) {
+    console.error("❌ MongoDB Atlas connection failed:", error.message);
+    process.exit(1);
+  }
+};
 
 export default connectDB;

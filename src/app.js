@@ -11,13 +11,14 @@ import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
 import { createEvent, getEvents } from '../controllers/eventController.js';
 import Event from "../models/schemas/eventSchema.js";
+import connectDB from "../models/config/db.js";
 
 import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard, getStaffProfile, resetStaffPassword } from "../controllers/staff.js";
 import { getStudentsByBatch, resetStudentPassword, getStudentDetailsPage } from "../controllers/tutor.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const port = 3000;
+const port = process.env.PORT;
 const app = express();
 
 
@@ -131,8 +132,14 @@ app.get("/logout", (req, res) => {
 });
 
 
-app.listen(3000, () => {
-    console.log(`Server is running at http://localhost:3000`);
+// connect to DB, then start server
+const startServer = async () => {
+  await connectDB();
+  app.listen(port, () => {
+    console.log(`🚀 Server is running at http://localhost:${port}`);
   });
+};
+
+startServer();
 
 export default app;
