@@ -1,35 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title><%= title %></title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/samStyle.css" />
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f4f8fc;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .form-container {
+      width: 420px;
+      background-color: #ffffff;
+      border: 1px solid #e1e8f0;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 25px 30px;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccd6e0;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #32aaff;
+      box-shadow: 0 0 4px rgba(50, 170, 255, 0.4);
+    }
+
+    .form-container button {
+      display: block;
+      width: 100%;
+      margin-top: 15px;
+      background-color: #32aaff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 15px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .form-container button:hover {
+      background-color: #2389d9;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #32aaff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h1>Create Student</h1>
+  <%-include("staffMenu")%>
+  <div class="form-container">
+    <h2>Create Student</h2>
+    <form action="/staff/createStudent" method="POST">
+      <div class="form-group">
+        <label>Email (must end with @psgtech.ac.in):</label>
+        <input type="email" name="email" required>
+      </div>
 
-  <form action="/staff/createStudent" method="POST">
-    <label>Email (must end with @psgtech.ac.in):</label>
-    <input type="email" name="email" required><br><br>
+      <div class="form-group">
+        <label>Name:</label>
+        <input type="text" name="name" required>
+      </div>
 
-    <label>Name:</label>
-    <input type="text" name="name" required><br><br>
+      <div class="form-group">
+        <label>Batch:</label>
+        <input type="text" name="batch" placeholder="e.g., 24mxg1" required>
+      </div>
 
-    <label>Batch:</label>
-    <input type="text" name="batch" placeholder="e.g., 24mxg1" required><br><br>
+      <div class="form-group">
+        <label>Roll Number:</label>
+        <input type="text" name="rollNumber" required>
+      </div>
 
-    <label>Roll Number:</label>
-    <input type="text" name="rollNumber" required><br><br>
+      <div class="form-group">
+        <label>Class Name:</label>
+        <input type="text" name="className" placeholder="e.g., g1" required>
+      </div>
 
-    <label>Class Name:</label>
-    <input type="text" name="className" placeholder="e.g., g1" required><br><br>
+      <div class="form-group">
+        <label>Department:</label>
+        <input type="text" name="department" required>
+      </div>
 
-    <label>Department:</label>
-    <input type="text" name="department" required><br><br>
+      <button type="submit">Create Student</button>
+    </form>
 
-    <button type="submit">Create Student</button>
-  </form>
-
-  <br>
-  <a href="/staff">⬅ Back to Dashboard</a>
+    <a href="/staff" class="back-link">⬅ Back to Dashboard</a>
+  </div>
 </body>
 </html>
