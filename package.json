@@ -3,6 +3,7 @@
     "animate.css": "^4.1.1",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.1",
     "ejs": "^3.1.10",
     "express": "^4.21.1",

@@ -2,30 +2,28 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import session from "express-session";
-import { title } from "process";
+import cookieParser from "cookie-parser";
 import { login } from "../controllers/login.js";
 import { studentDashboard, displayStudProfile, updateStudProfile, resetPassword } from "../controllers/studentController.js";
 import { addAchievementController, achievementFormAdd, getEditAchieve, postEditAchieve, deleteAchieve } from "../controllers/studentAchievement.js";
 import { upload } from '../middlewares/multerConfig.js';
-import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
+import { verifyToken, checkStudent, checkStaff } from "../middlewares/auth.js";
 import { createEvent, getEvents } from '../controllers/eventController.js';
 import { renderCreateStudentForm, createStudentHandler, deleteStudentHandler } from "../controllers/adminController.js";
 import Event from "../models/schemas/eventSchema.js";
 import connectDB from "../models/config/db.js";
-
-
 import { fetchAchievementDetailsForModal, fetchAchievementsForTable, renderStaffDashboard, getStaffProfile, resetStaffPassword } from "../controllers/staff.js";
 import { getStudentsByBatch, resetStudentPassword, getStudentDetailsPage } from "../controllers/tutor.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const app = express();
 
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "ejs");
@@ -33,31 +31,18 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "../public")));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false, 
-    cookie: {
-      secure: process.env.NODE_ENV === "production", 
-      httpOnly: true,          
-      sameSite: "lax",          
-      maxAge: 1000 * 60 * 60,   
-    }
-  })
-);
-
 const preventCache = (req, res, next) => {
   res.setHeader("Cache-Control", "no-store");
-  res.setHeader("Pragme", "no-cache");
+  res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
   next();
 };
 
+// ------------------- ROUTES -------------------
+
 app.get("/", (req, res) => {
   res.render("homePage", { title: "Home Page" });
 });
-
 
 app.post("/login", login);
 
@@ -65,38 +50,28 @@ app.get("/loginpage", (req, res) => {
   res.render("login", { title: "Login Page" });
 });
 
-app.get("/student", preventCache, checkStudSession, studentDashboard);
+// -------- Student Routes --------
+app.get("/student", preventCache, verifyToken, checkStudent, studentDashboard);
+app.get("/student/profile", preventCache, verifyToken, checkStudent, displayStudProfile);
+app.post("/student/profile/update", preventCache, verifyToken, checkStudent, updateStudProfile);
 
-app.get("/student/profile", preventCache, checkStudSession, displayStudProfile);
+app.get("/addachievement", preventCache, verifyToken, checkStudent, achievementFormAdd);
+app.post("/addachievement", verifyToken, checkStudent, upload.single('certificate'), addAchievementController);
 
-app.post("/student/profile/update", preventCache, checkStudSession, updateStudProfile);
+app.get('/editAchieve/:id', preventCache, verifyToken, checkStudent, getEditAchieve);
+app.post('/editAchieve/:id', preventCache, verifyToken, checkStudent, upload.single('certificate'), postEditAchieve);
+app.get('/deleteAchieve/:id', preventCache, verifyToken, checkStudent, deleteAchieve);
 
-app.get("/addachievement", preventCache, checkStudSession, achievementFormAdd);
+// -------- Staff Routes --------
+app.get('/staff', preventCache, verifyToken, checkStaff, renderStaffDashboard);
+app.get('/staff/fetchAchievements', preventCache, verifyToken, checkStaff, fetchAchievementsForTable);
+app.get('/staff/achievement/:id', preventCache, verifyToken, checkStaff, fetchAchievementDetailsForModal);
 
-app.post("/addachievement", checkStudSession, upload.single('certificate'), addAchievementController,);
+app.get('/events', preventCache, verifyToken, checkStaff, (req, res) => res.render('event'));
 
-app.get('/editAchieve/:id', preventCache, checkStudSession, getEditAchieve);
-
-app.post('/editAchieve/:id', preventCache, checkStudSession, upload.single('certificate'), postEditAchieve);
-
-app.get('/deleteAchieve/:id', preventCache, checkStudSession, deleteAchieve);
-
-app.get('/staff', preventCache, checkStaffSession, renderStaffDashboard);
-
-app.get('/staff/fetchAchievements', preventCache, checkStaffSession, fetchAchievementsForTable);
-
-app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal);
-
-app.get('/events', preventCache, checkStaffSession, (req, res) => res.render('event'));
-
-// Staff events endpoint
-app.get('/staff/api/events', preventCache, checkStaffSession, getEvents);
-
-// Student events endpoint
-app.get('/student/api/events', preventCache, checkStudSession, getEvents);
-
-
-app.delete('/api/events/:id', preventCache, checkStaffSession, async (req, res) => {
+// Staff events API
+app.get('/staff/api/events', preventCache, verifyToken, checkStaff, getEvents);
+app.delete('/api/events/:id', preventCache, verifyToken, checkStaff, async (req, res) => {
   try {
     const eventId = req.params.id;
     const deletedEvent = await Event.findByIdAndDelete(eventId);
@@ -110,48 +85,38 @@ app.delete('/api/events/:id', preventCache, checkStaffSession, async (req, res) 
     res.status(500).json({ message: 'Error deleting event.' });
   }
 });
+app.post('/events', verifyToken, checkStaff, upload.single('eventFile'), createEvent);
 
-app.post('/events', upload.single('eventFile'), createEvent);
+// Staff student management
+app.get('/staff/createStudent', preventCache, verifyToken, checkStaff, renderCreateStudentForm);
+app.post('/staff/createStudent', preventCache, verifyToken, checkStaff, createStudentHandler);
+app.delete('/deleteStudent/:email', preventCache, verifyToken, checkStaff, deleteStudentHandler);
 
+app.get("/staff/profile", preventCache, verifyToken, checkStaff, getStaffProfile);
 
-// staff: show create student form
-app.get('/staff/createStudent', preventCache, checkStaffSession, renderCreateStudentForm);
+// -------- Tutor Routes --------
+app.post('/tutorAccess', preventCache, verifyToken, checkStaff, getStudentsByBatch);
+app.post('/resetStudPassword', preventCache, verifyToken, checkStaff, resetStudentPassword);
+app.get('/studentDetails/:id', preventCache, verifyToken, checkStaff, getStudentDetailsPage);
 
-// staff: submit new student
-app.post('/staff/createStudent', preventCache, checkStaffSession, createStudentHandler);
+// -------- Password Reset --------
+app.get('/student/resetpassword', (req, res) => res.render('resetPassword'));
+app.post('/student/resetpassword', preventCache, verifyToken, checkStudent, resetPassword);
 
-app.delete('/deleteStudent/:email', preventCache, checkStaffSession, deleteStudentHandler);
+app.get('/staff/resetpassword', (req, res) => res.render('resetPassword'));
+app.post('/staff/resetpassword', preventCache, verifyToken, checkStaff, resetStaffPassword);
 
-app.get("/staff/profile", preventCache, checkStaffSession, getStaffProfile);
-
-app.post('/tutorAccess', preventCache, checkStaffSession, getStudentsByBatch);
-
-app.post('/resetStudPassword', preventCache, checkStaffSession, resetStudentPassword);
-
-app.get('/studentDetails/:id', preventCache, checkStaffSession, getStudentDetailsPage);
-
-app.get('/student/resetpassword', (req, res) => {
-  res.render('resetPassword');
-});
-
-app.post('/student/resetpassword', preventCache, checkStaffSession, resetPassword);
-
-app.get('/staff/resetpassword', (req, res) => {
-  res.render('resetPassword');
-});
-
-app.post('/staff/resetpassword', preventCache, checkStaffSession, resetStaffPassword);
-
-
-
+// -------- Logout --------
 app.get("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      res.send("Error occurred during logout!");
-    }
-    res.redirect("/");
-  });
+  res.clearCookie("token");
+  res.redirect("/");
 });
+
+// ------------------- DB CONNECTION -------------------
+
+await connectDB();
+export default app;
+
 
 
 // Connect to DB before handling any request
@@ -165,5 +130,3 @@ app.get("/logout", (req, res) => {
 // }
 
 // export default app;
-await connectDB();
-export default app;
