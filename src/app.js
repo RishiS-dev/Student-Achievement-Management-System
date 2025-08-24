@@ -10,8 +10,10 @@ import { addAchievementController, achievementFormAdd, getEditAchieve, postEditA
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
 import { createEvent, getEvents } from '../controllers/eventController.js';
+import { renderCreateStudentForm, createStudentHandler } from "../controllers/adminController.js";
 import Event from "../models/schemas/eventSchema.js";
 import connectDB from "../models/config/db.js";
+
 
 import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard, getStaffProfile, resetStaffPassword } from "../controllers/staff.js";
 import { getStudentsByBatch, resetStudentPassword, getStudentDetailsPage } from "../controllers/tutor.js";
@@ -81,7 +83,12 @@ app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievem
 
 app.get('/events', preventCache, checkStaffSession, (req, res) => res.render('event'));
 
-app.get('/api/events', preventCache, checkStaffSession, getEvents);
+// Staff events endpoint
+app.get('/staff/api/events', preventCache, checkStaffSession, getEvents);
+
+// Student events endpoint
+app.get('/student/api/events', preventCache, checkStudSession, getEvents);
+
 
 app.delete('/api/events/:id', preventCache,checkStaffSession, async (req, res) => {
   try {
@@ -99,6 +106,13 @@ app.delete('/api/events/:id', preventCache,checkStaffSession, async (req, res) =
 });
 
 app.post('/events', upload.single('eventFile'), createEvent);
+
+
+// staff: show create student form
+app.get('/staff/createStudent', preventCache, checkStaffSession, renderCreateStudentForm);
+
+// staff: submit new student
+app.post('/staff/createStudent', preventCache, checkStaffSession, createStudentHandler);
 
 app.get("/staff/profile", preventCache, checkStaffSession, getStaffProfile);
 

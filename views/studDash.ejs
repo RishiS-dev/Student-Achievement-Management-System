@@ -1,336 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Dashboard</title>
-    <link rel="stylesheet" href="/samStyle.css">
+    <link rel="stylesheet" href="/samStyle.css" />
     <style>
-        /* Add custom CSS to reduce the size of the edit and delete icons */
-        .edit-icon, .delete-icon {
-            width: 20px; 
-            height: 20px; 
-            object-fit: contain; 
-            cursor: pointer;
-            margin-left: 10px; 
-        }
-        .event-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+      /* Add custom CSS to reduce the size of the edit and delete icons */
+      .edit-icon,
+      .delete-icon {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+      .event-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
 
-        .event-item span {
-            cursor: pointer;
-        }
+      .event-item span {
+        cursor: pointer;
+      }
 
-        /* Modal Styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; 
-            z-index: 1000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
-        }
+      /* Modal Styles */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+      }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto; /* 10% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%; /* Could be more or less, depending on screen size */
-            border-radius: 5px;
-            position: relative;
-        }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto; /* 10% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%; /* Could be more or less, depending on screen size */
+        border-radius: 5px;
+        position: relative;
+      }
 
-        .close {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+      .close {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+      }
 
-        .modal-header {
-            margin-bottom: 15px;
-        }
+      .modal-header {
+        margin-bottom: 15px;
+      }
 
-        .modal-header h2 {
-            margin: 0;
-        }
+      .modal-header h2 {
+        margin: 0;
+      }
 
-        .modal-body p {
-            margin: 5px 0;
-        }
+      .modal-body p {
+        margin: 5px 0;
+      }
 
-        .main-content {
-            margin-left: 70px;
-        }
+      .main-content {
+        margin-left: 70px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="logo-container">
-        <img src="./samsSlogan.png" alt="Logo" class="logo">
-    </div>    
+      <img src="./samsSlogan.png" alt="Logo" class="logo" />
+    </div>
     <div class="dashboard student-dashboard">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="menu-toggle">
-                <button class="menu-btn">☰</button>
-                <div class="menu-dropdown">
-                    <ul>
-                        <a href="/student/profile"><li>Profile</li></a>
-                        <a href="/student"><li>Dashboard</li></a>
-                        <a href="/student/resetpassword"><li>Reset Password</li></a>
-                        <a href="/logout"><li>Logout</li></a>
-                    </ul>
-                </div>
-            </div>
-
-            <h3>Upcoming Events</h3>
-            <div id="events-list">
-                <p>No upcoming events</p>
-            </div>
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <%-include("Studmenu")%>
+        <h3>Upcoming Events</h3>
+        <div id="events-list">
+          <p>No upcoming events</p>
         </div>
+      </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="header">
-                <h1>Student Dashboard</h1>
-            </header>
+      <!-- Main Content -->
+      <div class="main-content">
+        <header class="header">
+          <h1>Student Dashboard</h1>
+        </header>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sno</th>
-                            <th>Achievement Name</th>
-                            <th>Achievement Date</th>
-                            <th>Category</th>
-                            <th colspan="2">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% achievements.forEach((achievement, index) => { %>
-                            <tr data-id="<%= achievement._id %>" class="achievement-row">
-                                <td><%= index + 1 %></td>
-                                <td><%= achievement.achievementName %></td>
-                                <td><%= new Date(achievement.date).toLocaleDateString() %></td>
-                                <td><%= achievement.category %></td>
-                                <td class="action-icons">
-                                    <a href="/editAchieve/<%= achievement._id %>">
-                                        <img src="/edit-icon.png" alt="Edit" class="edit-icon"> <!-- Edit Icon -->
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="/deleteAchieve/<%= achievement._id %>">
-                                        <img src="/delete-icon.png" alt="Delete" class="delete-icon"> <!-- Delete Icon -->
-                                    </a>
-                                </td>
-                            </tr>
-                        <% }); %>                            
-                    </tbody>
-                </table>
-                <a href="/addachievement"><button class="add-btn-stud">+</button></a>
-            </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Sno</th>
+                <th>Achievement Name</th>
+                <th>Achievement Date</th>
+                <th>Category</th>
+                <th colspan="2">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% achievements.forEach((achievement, index) => { %>
+              <tr data-id="<%= achievement._id %>" class="achievement-row">
+                <td><%= index + 1 %></td>
+                <td><%= achievement.achievementName %></td>
+                <td><%= new Date(achievement.date).toLocaleDateString() %></td>
+                <td><%= achievement.category %></td>
+                <td class="action-icons">
+                  <a href="/editAchieve/<%= achievement._id %>">
+                    <img src="/edit-icon.png" alt="Edit" class="edit-icon" />
+                    <!-- Edit Icon -->
+                  </a>
+                </td>
+                <td>
+                  <a href="/deleteAchieve/<%= achievement._id %>">
+                    <img
+                      src="/delete-icon.png"
+                      alt="Delete"
+                      class="delete-icon"
+                    />
+                    <!-- Delete Icon -->
+                  </a>
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+          <a href="/addachievement"><button class="add-btn-stud">+</button></a>
         </div>
+      </div>
     </div>
     <div id="event-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <div class="modal-header">Event Details</div>
-            <div class="modal-body">
-                <p><strong>Event Name:</strong> <span id="modal-event-name"></span></p>
-                <p><strong>Event Date:</strong> <span id="modal-event-date"></span></p>
-                <p><strong>Organizer:</strong> <span id="modal-event-organizer"></span></p>
-                <p><strong>Category:</strong> <span id="modal-event-category"></span></p>
-                <p><strong>Rewards:</strong> <span id="modal-event-rewards"></span></p>
-                <p><strong>Instructions:</strong> <span id="modal-instructions"></span></p>
-                <div id="file-container" style="display: none;">
-                    <strong>Uploaded File:</strong>
-                    <div id="modal-file-content"></div>
-                </div>
-            </div>
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div class="modal-header">Event Details</div>
+        <div class="modal-body">
+          <p>
+            <strong>Event Name:</strong> <span id="modal-event-name"></span>
+          </p>
+          <p>
+            <strong>Event Date:</strong> <span id="modal-event-date"></span>
+          </p>
+          <p>
+            <strong>Organizer:</strong> <span id="modal-event-organizer"></span>
+          </p>
+          <p>
+            <strong>Category:</strong> <span id="modal-event-category"></span>
+          </p>
+          <p>
+            <strong>Rewards:</strong> <span id="modal-event-rewards"></span>
+          </p>
+          <p>
+            <strong>Instructions:</strong> <span id="modal-instructions"></span>
+          </p>
+          <div id="file-container" style="display: none">
+            <strong>Uploaded File:</strong>
+            <div id="modal-file-content"></div>
+          </div>
         </div>
+      </div>
     </div>
-    <!-- <script>
-       async function displayEvents() {
-            try {
-                const response = await fetch('/api/events');
-                if (response.ok) {
-                    const events = await response.json();
-                    const eventsList = document.getElementById('events-list'); // Using ID selector
-
-                    eventsList.innerHTML = '';
-
-                    if (events.length === 0) {
-                        eventsList.innerHTML = '<p>No upcoming events</p>';
-                    } else {
-                        events.forEach((event) => {
-                            const eventItem = document.createElement('div');
-                            eventItem.classList.add('event-item');
-
-                            const eventText = document.createElement('span');
-                            eventText.textContent = `${event.eventName} (${new Date(event.eventDate).toLocaleDateString()}) - ${event.eventCategory}`;
-                            eventText.onclick = () => showEventDetails(event);
-
-                            eventItem.appendChild(eventText);
-                            eventsList.appendChild(eventItem);
-                        });
-                    }
-                } else {
-                    console.error('Failed to fetch events.');
-                    const eventsList = document.getElementById('events-list');
-                    eventsList.innerHTML = '<p>Error fetching events.</p>';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                const eventsList = document.getElementById('events-list');
-                eventsList.innerHTML = '<p>Error fetching events.</p>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', displayEvents);
-
-        function showEventDetails(event) {
-            // Populate modal with event details
-            document.getElementById('modalEventName').textContent = event.eventName;
-            document.getElementById('modalEventDate').textContent = new Date(event.eventDate).toLocaleDateString();
-            document.getElementById('modalEventOrganizer').textContent = event.eventOrganizer;
-            document.getElementById('modalEventCategory').textContent = event.eventCategory;
-            document.getElementById('modalEventDescription').textContent = event.description || 'N/A';
-
-            const fileContainer = document.getElementById('file-container');
-            const fileContent = document.getElementById('modal-file-content');
-
-            if (event.eventFile) {
-                fileContainer.style.display = 'block';
-
-                const fileURL = `/uploads/events/${event.eventFile}`;
-                const fileType = event.eventFileType;
-
-                if (fileType.startsWith('image/')) {
-                    fileContent.innerHTML = `<img src="${fileURL}" alt="Uploaded File" style="max-width: 100%; height: auto;">`;
-                } else if (fileType === 'application/pdf') {
-                    fileContent.innerHTML = `<iframe src="${fileURL}" style="width: 100%; height: 300px;"></iframe>`;
-                } else {
-                    fileContent.innerHTML = `<a href="${fileURL}" target="_blank" style="color: #32aaff;">Download File</a>`;
-                }
-            } else {
-                fileContainer.style.display = 'none';
-                fileContent.innerHTML = '';
-            }
-
-            // Display the modal
-            const modal = document.getElementById('eventModal');
-            modal.style.display = 'block';
-        }
-
-        // Close the modal when the user clicks on <span> (x)
-        document.querySelector('.close').onclick = function() {
-            const modal = document.getElementById('eventModal');
-            modal.style.display = 'none';
-        }
-
-        // Close the modal when the user clicks anywhere outside of the modal
-        window.onclick = function(event) {
-            const modal = document.getElementById('eventModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script> -->
     <script>
-        async function displayEvents() {
-          try {
-            const response = await fetch('/api/events');
-            if (response.ok) {
-              const events = await response.json();
-              const eventsList = document.getElementById('events-list');
-      
-              eventsList.innerHTML = '';
-      
-              if (events.length === 0) {
-                eventsList.innerHTML = '<p>No upcoming events</p>';
-              } else {
-                events.forEach((event) => {
-                  const eventItem = document.createElement('div');
-                  eventItem.classList.add('event-item');
-      
-                  const eventText = document.createElement('span');
-                  eventText.textContent = `${event.eventName} (${new Date(event.eventDate).toLocaleDateString()}) - ${event.eventCategory}`;
-      
-                  eventText.onclick = () => showEventDetails(event);
-      
-                  eventItem.appendChild(eventText);
-                  eventsList.appendChild(eventItem);
-                });
-              }
-            } else {
-              console.error('Failed to fetch events.');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-          }
-        }
+      async function displayEvents() {
+        try {
+          const response = await fetch("/student/api/events");
+          if (response.ok) {
+            const events = await response.json();
+            const eventsList = document.getElementById("events-list");
 
-        function showEventDetails(event) {
-          document.getElementById('modal-event-name').textContent = event.eventName;
-          document.getElementById('modal-event-date').textContent = new Date(event.eventDate).toLocaleDateString();
-          document.getElementById('modal-event-organizer').textContent = event.eventOrganizer;
-          document.getElementById('modal-event-category').textContent = event.eventCategory;
-          document.getElementById('modal-event-rewards').textContent = event.eventRewards || 'N/A';
-          document.getElementById('modal-instructions').textContent = event.eventInstructions || 'N/A';
-      
-          const fileContainer = document.getElementById('file-container');
-          const fileContent = document.getElementById('modal-file-content');
-      
-          if (event.eventFile) {
-            fileContainer.style.display = 'block';
-            const fileURL = `/uploads/events/${event.eventFile}`;
-            const fileType = event.eventFileType;
-      
-            if (fileType.startsWith('image/')) {
-              fileContent.innerHTML = `<img src="${fileURL}" alt="Uploaded File" style="max-width: 100%; height: auto;">`;
-            } else if (fileType === 'application/pdf') {
-              fileContent.innerHTML = `<iframe src="${fileURL}" style="width: 100%; height: 300px;"></iframe>`;
+            eventsList.innerHTML = "";
+
+            if (events.length === 0) {
+              eventsList.innerHTML = "<p>No upcoming events</p>";
             } else {
-              fileContent.innerHTML = `<a href="${fileURL}" target="_blank" style="color: #32aaff;">Download File</a>`;
+              events.forEach((event) => {
+                const eventItem = document.createElement("div");
+                eventItem.classList.add("event-item");
+
+                const eventText = document.createElement("span");
+                eventText.textContent = `${event.eventName} (${new Date(
+                  event.eventDate
+                ).toLocaleDateString()}) - ${event.eventCategory}`;
+
+                eventText.onclick = () => showEventDetails(event);
+
+                eventItem.appendChild(eventText);
+                eventsList.appendChild(eventItem);
+              });
             }
           } else {
-            fileContainer.style.display = 'none';
-            fileContent.innerHTML = '';
+            console.error("Failed to fetch events.");
           }
-          document.getElementById('event-modal').style.display = 'block';
+        } catch (error) {
+          console.error("Error:", error);
         }
-      
-        document.querySelector('.modal-close').addEventListener('click', () => {
-          document.getElementById('event-modal').style.display = 'none';
-        });
-      
-        window.onclick = function(event) {
-          const modal = document.getElementById('event-modal');
-          if (event.target === modal) {
-            modal.style.display = 'none';
+      }
+
+      function showEventDetails(event) {
+        document.getElementById("modal-event-name").textContent =
+          event.eventName;
+        document.getElementById("modal-event-date").textContent = new Date(
+          event.eventDate
+        ).toLocaleDateString();
+        document.getElementById("modal-event-organizer").textContent =
+          event.eventOrganizer;
+        document.getElementById("modal-event-category").textContent =
+          event.eventCategory;
+        document.getElementById("modal-event-rewards").textContent =
+          event.eventRewards || "N/A";
+        document.getElementById("modal-instructions").textContent =
+          event.eventInstructions || "N/A";
+
+        const fileContainer = document.getElementById("file-container");
+        const fileContent = document.getElementById("modal-file-content");
+
+        if (event.eventFile) {
+          fileContainer.style.display = "block";
+          const fileURL = `/uploads/events/${event.eventFile}`;
+          const fileType = event.eventFileType;
+
+          if (fileType.startsWith("image/")) {
+            fileContent.innerHTML = `<img src="${fileURL}" alt="Uploaded File" style="max-width: 100%; height: auto;">`;
+          } else if (fileType === "application/pdf") {
+            fileContent.innerHTML = `<iframe src="${fileURL}" style="width: 100%; height: 300px;"></iframe>`;
+          } else {
+            fileContent.innerHTML = `<a href="${fileURL}" target="_blank" style="color: #32aaff;">Download File</a>`;
           }
-        };
-      
-        document.addEventListener('DOMContentLoaded', displayEvents);
-      </script>
-      
-</body>
-</html> 
+        } else {
+          fileContainer.style.display = "none";
+          fileContent.innerHTML = "";
+        }
+        document.getElementById("event-modal").style.display = "block";
+      }
+
+      document.querySelector(".modal-close").addEventListener("click", () => {
+        document.getElementById("event-modal").style.display = "none";
+      });
+
+      window.onclick = function (event) {
+        const modal = document.getElementById("event-modal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", displayEvents);
+    </script>
+  </body>
+</html>

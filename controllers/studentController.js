@@ -7,7 +7,7 @@ export const studentDashboard = async (req, res) => {
   try {
    
     const achievements = await fetchDashAchievements(req.session.student.rollno);
-    const events = await Event.find();
+    const events = await Event.find().sort({ date: -1 })
     res.render('studDash', {
       title: 'Student Dashboard',
       achievements, 
