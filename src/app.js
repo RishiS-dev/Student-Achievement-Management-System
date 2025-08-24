@@ -10,7 +10,7 @@ import { addAchievementController, achievementFormAdd, getEditAchieve, postEditA
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
 import { createEvent, getEvents } from '../controllers/eventController.js';
-import { renderCreateStudentForm, createStudentHandler } from "../controllers/adminController.js";
+import { renderCreateStudentForm, createStudentHandler, deleteStudentHandler } from "../controllers/adminController.js";
 import Event from "../models/schemas/eventSchema.js";
 import connectDB from "../models/config/db.js";
 
@@ -113,6 +113,8 @@ app.get('/staff/createStudent', preventCache, checkStaffSession, renderCreateStu
 
 // staff: submit new student
 app.post('/staff/createStudent', preventCache, checkStaffSession, createStudentHandler);
+
+app.delete('/deleteStudent/:email', preventCache, checkStaffSession, deleteStudentHandler);
 
 app.get("/staff/profile", preventCache, checkStaffSession, getStaffProfile);
 

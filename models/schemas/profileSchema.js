@@ -28,6 +28,12 @@ const profileSchema = new mongoose.Schema(
       required: true,
       uppercase: true,
     },
+    email: {
+      type: String,
+      required: true,
+      match: /^[a-zA-Z0-9._%+-]+@psgtech\.ac\.in$/,
+      lowercase: true,
+    },
     achievements: [
       {
         type: mongoose.Schema.Types.ObjectId,

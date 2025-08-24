@@ -26,13 +26,13 @@ export const authenticateStudent = async (email, password) => {
 
 
 export async function createStudent(email, name, batch, rollNumber, className, department) {
+  const profile = await initProfileCreate(name, batch, rollNumber, className, department, email);
 
-  const profile = await initProfileCreate(name, batch, rollNumber, className, department)
   try {
     const newStudentAuth = new StudentAuth({
-      email : email,
-      password : rollNumber,
-      profile: profile._id, 
+      email: email,
+      password: rollNumber,
+      profile: profile,    
     });
 
     const savedStudentAuth = await newStudentAuth.save();
@@ -43,7 +43,8 @@ export async function createStudent(email, name, batch, rollNumber, className, d
 }
 
 
-async function initProfileCreate(name, batch, rollNumber, className, department) {
+
+async function initProfileCreate(name, batch, rollNumber, className, department, email) {
   try {
     const newProfile = new Profile({
       rno: rollNumber,
@@ -51,6 +52,7 @@ async function initProfileCreate(name, batch, rollNumber, className, department)
       class: className,
       batch: batch,
       department: department,
+      email: email,       // ✅ store email in profile
       achievements: [], 
       github: null,     
       leetcode: null,  
@@ -63,6 +65,7 @@ async function initProfileCreate(name, batch, rollNumber, className, department)
     throw new Error(error.message);
   }
 }
+
 
 
 export async function updatePassword(email, newPassword) {
