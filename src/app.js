@@ -4,8 +4,8 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import session from "express-session";
 import { title } from "process";
-import {login} from "../controllers/login.js";
-import { studentDashboard , displayStudProfile, updateStudProfile, resetPassword} from "../controllers/studentController.js";
+import { login } from "../controllers/login.js";
+import { studentDashboard, displayStudProfile, updateStudProfile, resetPassword } from "../controllers/studentController.js";
 import { addAchievementController, achievementFormAdd, getEditAchieve, postEditAchieve, deleteAchieve } from "../controllers/studentAchievement.js";
 import { upload } from '../middlewares/multerConfig.js';
 import { checkStaffSession, checkStudSession } from "../middlewares/sessionManage.js";
@@ -15,7 +15,7 @@ import Event from "../models/schemas/eventSchema.js";
 import connectDB from "../models/config/db.js";
 
 
-import { fetchAchievementDetailsForModal,fetchAchievementsForTable,renderStaffDashboard, getStaffProfile, resetStaffPassword } from "../controllers/staff.js";
+import { fetchAchievementDetailsForModal, fetchAchievementsForTable, renderStaffDashboard, getStaffProfile, resetStaffPassword } from "../controllers/staff.js";
 import { getStudentsByBatch, resetStudentPassword, getStudentDetailsPage } from "../controllers/tutor.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,7 +25,7 @@ const app = express();
 
 
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 
 app.set("view engine", "ejs");
 
@@ -61,13 +61,13 @@ app.get("/loginpage", (req, res) => {
 
 app.get("/student", preventCache, checkStudSession, studentDashboard);
 
-app.get("/student/profile",preventCache, checkStudSession, displayStudProfile);
+app.get("/student/profile", preventCache, checkStudSession, displayStudProfile);
 
-app.post("/student/profile/update",preventCache, checkStudSession, updateStudProfile);
+app.post("/student/profile/update", preventCache, checkStudSession, updateStudProfile);
 
-app.get("/addachievement",preventCache, checkStudSession, achievementFormAdd);
+app.get("/addachievement", preventCache, checkStudSession, achievementFormAdd);
 
-app.post("/addachievement",checkStudSession, upload.single('certificate'), addAchievementController,);
+app.post("/addachievement", checkStudSession, upload.single('certificate'), addAchievementController,);
 
 app.get('/editAchieve/:id', preventCache, checkStudSession, getEditAchieve);
 
@@ -75,11 +75,11 @@ app.post('/editAchieve/:id', preventCache, checkStudSession, upload.single('cert
 
 app.get('/deleteAchieve/:id', preventCache, checkStudSession, deleteAchieve);
 
-app.get('/staff', preventCache, checkStaffSession, renderStaffDashboard); 
+app.get('/staff', preventCache, checkStaffSession, renderStaffDashboard);
 
-app.get('/staff/fetchAchievements',preventCache, checkStaffSession, fetchAchievementsForTable); 
+app.get('/staff/fetchAchievements', preventCache, checkStaffSession, fetchAchievementsForTable);
 
-app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal); 
+app.get('/staff/achievement/:id', preventCache, checkStaffSession, fetchAchievementDetailsForModal);
 
 app.get('/events', preventCache, checkStaffSession, (req, res) => res.render('event'));
 
@@ -90,7 +90,7 @@ app.get('/staff/api/events', preventCache, checkStaffSession, getEvents);
 app.get('/student/api/events', preventCache, checkStudSession, getEvents);
 
 
-app.delete('/api/events/:id', preventCache,checkStaffSession, async (req, res) => {
+app.delete('/api/events/:id', preventCache, checkStaffSession, async (req, res) => {
   try {
     const eventId = req.params.id;
     const deletedEvent = await Event.findByIdAndDelete(eventId);
@@ -120,7 +120,7 @@ app.get("/staff/profile", preventCache, checkStaffSession, getStaffProfile);
 
 app.post('/tutorAccess', preventCache, checkStaffSession, getStudentsByBatch);
 
-app.post('/resetStudPassword', preventCache,checkStaffSession, resetStudentPassword);
+app.post('/resetStudPassword', preventCache, checkStaffSession, resetStudentPassword);
 
 app.get('/studentDetails/:id', preventCache, checkStaffSession, getStudentDetailsPage);
 
@@ -148,13 +148,15 @@ app.get("/logout", (req, res) => {
 });
 
 
-// connect to DB, then start server
-const startServer = async () => {
-  await connectDB();
-  app.listen(port, () => {
-    console.log(`🚀 Server is running at http://localhost:${port}`);
+// Connect to DB before handling any request
+await connectDB();
+
+// Only start server if not running on Vercel
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT || 3000, () => {
+    console.log(`✅ Server running locally at http://localhost:${PORT || 3000}`);
   });
-};
+}
 
 startServer();
 
