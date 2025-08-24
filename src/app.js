@@ -34,7 +34,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use(
   session({
-    secret: "secret-key",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false },
@@ -153,8 +153,8 @@ await connectDB();
 
 // Only start server if not running on Vercel
 if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT || 3000, () => {
-    console.log(`✅ Server running locally at http://localhost:${PORT || 3000}`);
+  app.listen(PORT, () => {
+    console.log(`✅ Server running locally at http://localhost:${PORT}`);
   });
 }
 
