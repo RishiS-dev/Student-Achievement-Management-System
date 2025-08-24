@@ -149,15 +149,15 @@ app.get("/logout", (req, res) => {
 
 
 // Connect to DB before handling any request
+// await connectDB();
+
+// // Only start server if not running on Vercel
+// if (process.env.NODE_ENV !== "production") {
+//   app.listen(port, () => {
+//     console.log(`✅ Server running locally at http://localhost:${port}`);
+//   });
+// }
+
+// export default app;
 await connectDB();
-
-// Only start server if not running on Vercel
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`✅ Server running locally at http://localhost:${PORT}`);
-  });
-}
-
-startServer();
-
 export default app;
